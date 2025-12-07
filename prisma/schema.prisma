@@ -1,0 +1,175 @@
+// Prisma schema for LittleHelper
+// Database: PostgreSQL
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  avatarUrl String?
+  role      UserRole @default(USER)
+  banned    Boolean  @default(false)
+  lastLogin DateTime?
+  sessions  Session[]
+  comments  Comment[]
+  threads   CommentThread[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
+
+model Page {
+  id          String   @id @default(cuid())
+  parent      Page?    @relation("PageToPage", fields: [parentId], references: [id])
+  parentId    String?
+  children    Page[]   @relation("PageToPage")
+  headerImage String?
+  locales     PageLocale[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model PageLocale {
+  id             String    @id @default(cuid())
+  page           Page      @relation(fields: [pageId], references: [id])
+  pageId         String
+  locale         String
+  title          String
+  slug           String
+  summary        String?
+  keywords       String[]
+  markdownPath   String
+  headerImage    String?
+  geminiLocked   Boolean   @default(false)
+  anchors        Anchor[]
+  comments       CommentThread[]
+  releaseSnapshots ReleasePageSnapshot[]
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@unique([pageId, locale])
+  @@unique([locale, slug])
+}
+
+model Anchor {
+  id           String   @id @default(cuid())
+  pageLocale   PageLocale @relation(fields: [pageLocaleId], references: [id])
+  pageLocaleId String
+  anchorId     String
+  hash         String
+  index        Int
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@unique([pageLocaleId, anchorId])
+}
+
+model CommentThread {
+  id           String   @id @default(cuid())
+  pageLocale   PageLocale @relation(fields: [pageLocaleId], references: [id])
+  pageLocaleId String
+  anchorId     String
+  comments     Comment[]
+  createdBy    User?     @relation(fields: [createdById], references: [id])
+  createdById  String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@unique([pageLocaleId, anchorId])
+}
+
+model Comment {
+  id           String   @id @default(cuid())
+  thread       CommentThread @relation(fields: [threadId], references: [id])
+  threadId     String
+  author       User?    @relation(fields: [authorId], references: [id])
+  authorId     String?
+  body         String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Redirect {
+  id        String   @id @default(cuid())
+  oldSlug   String
+  newSlug   String
+  locale    String
+  createdAt DateTime @default(now())
+
+  @@index([oldSlug, locale])
+}
+
+model Release {
+  id          String   @id @default(cuid())
+  tag         String   @unique
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
+  snapshots   ReleasePageSnapshot[]
+}
+
+model ReleasePageSnapshot {
+  id            String   @id @default(cuid())
+  release       Release  @relation(fields: [releaseId], references: [id])
+  releaseId     String
+  pageLocale    PageLocale @relation(fields: [pageLocaleId], references: [id])
+  pageLocaleId  String
+  slugAtRelease String
+
+  @@unique([releaseId, pageLocaleId])
+}
+
+model SettingGroup {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  data      Json
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+}
+
+model StorageAsset {
+  id         String   @id @default(cuid())
+  url        String   @unique
+  filename   String
+  mimeType   String
+  size       Int
+  uploader   User?    @relation(fields: [uploaderId], references: [id])
+  uploaderId String?
+  createdAt  DateTime @default(now())
+}
+
+model SyncLog {
+  id          String   @id @default(cuid())
+  status      SyncStatus
+  message     String?
+  details     Json?
+  startedAt   DateTime @default(now())
+  finishedAt  DateTime?
+}
+
+enum SyncStatus {
+  SUCCESS
+  FAILURE
+  RUNNING
+}
