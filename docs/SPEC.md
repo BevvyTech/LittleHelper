@@ -10,20 +10,22 @@ LittleHelper is a hybrid documentation/help platform modeled after premium hardw
 - Support responsive, accessible UX with theme controls, button style selector, and Google SSO.
 
 ## Assumptions
-- GitHub App is preferred for commits; PAT fallback allowed. Credentials stored securely via env/secret manager (not in repo).
+- GitHub App is preferred for commits; PAT fallback allowed. Credentials configurable via environment variables OR admin settings UI (env vars take precedence and grey out UI fields).
 - Markdown resides under a configurable base content folder; default `docs/` in repo.
 - Frontmatter keys: `title`, `slug`, `locale`, `parent`, `headerImage` (optional), `summary` (optional, overwritten by Gemini unless locked), `keywords` (optional list).
 - Paragraph anchors generated from normalized text hash with position fallback; algorithm documented in architecture.
 - Releases created by tagging the Git repository (e.g., `help-vX.Y`); content for releases fetched by checking out tag in a read-only mode.
 - Google OAuth client IDs/secrets are configured per environment; only Google SSO is enabled (no local/password login).
-- S3-compatible storage supports presigned uploads; images referenced in Markdown via absolute S3 URLs.
+- **Storage is dual-mode**: local filesystem by default, S3-compatible (AWS S3, DigitalOcean Spaces, MinIO) when configured. Credentials configurable via environment variables OR admin settings UI (env vars take precedence).
 - SSR uses Vite + React + Fastify (Node 20+). Admin CSR bundled separately but shares component library.
+- **SSR has direct database access** for optimal performance; API routes used for mutations and admin operations.
 - Clean Architecture is mandatory: domain entities remain pure (no IO/framework), application use cases orchestrate via ports, interface adapters implement DB/service gateways, and server/Vite/Prisma live in the outer layer only.
 - Prisma migration system owns database schema; `prisma migrate` used for changes.
 - Search indexing handled via future component (placeholder hooks), not implemented yet.
 - DigitalOcean/AWS deploy via Docker; Kubernetes/compose manifests added later.
 - Package management uses **pnpm** workspaces; lockfile committed and npm/yarn avoided.
 - Makefile orchestrates repeatable tasks (`launch`, `interactive`, `test`, `verify`, `migrate`, `migrate test`) and assumes pnpm tooling; commands should remain non-interactive for CI friendliness.
+- **Gemini API** credentials configurable via environment variables OR admin settings UI (env vars take precedence).
 
 ## Functional Requirements
 1. **Content model**
@@ -63,7 +65,16 @@ LittleHelper is a hybrid documentation/help platform modeled after premium hardw
    - Clean URLs without `.html`.
 
 9. **Storage**
-   - S3-compatible storage for images/assets; presigned uploads from admin UI.
+   - **Dual-mode storage**: local filesystem (default) or S3-compatible (AWS S3, DigitalOcean Spaces, MinIO).
+   - **Database tracks all assets**: Every file has a DB record with storage location and public URL for backend-agnostic access.
+   - Local storage uses configurable directory (default: `./uploads/`) with structured folder layout.
+   - Asset paths organized by page short ID (8-char unique identifier per page) to avoid complications when pages are moved/reorganized.
+   - Folder structure: `/{page-short-id}/{timestamp}-{filename}` (e.g., `/ab12cd34/1699876543-hero-image.png`).
+   - **S3 buckets must be public** (or objects set to public ACL) for direct browser access.
+   - S3 mode uses presigned URLs for uploads only; reads go direct to public URL.
+   - Assets referenced in Markdown via `asset:` URLs resolved from database at render time.
+   - **Secure assets mode** (optional setting): When enabled, all asset URLs route through server proxy with session validation. Enables private documentation deployments and prepares for enterprise SSO integration.
+   - Migration path: Old assets remain accessible via stored public URLs; admin tool available for full backend migration.
 
 10. **SEO**
     - Gemini used for summary/keywords generation; SSR ensures crawlable markup; meta tags include locale and release version when applicable.
@@ -74,6 +85,30 @@ LittleHelper is a hybrid documentation/help platform modeled after premium hardw
 - Performance: SSR response cached via CDN-friendly headers; admin endpoints rate-limited.
 - Security: OAuth-only login; CSRF protection on admin mutations; signed cookies/JWT for sessions.
 - Accessibility: WCAG AA targets; focus management for modal login; keyboard operable comments.
+
+## Error Handling & Notification System
+- **Inline errors**: Form field validation errors displayed directly below the field with red styling.
+- **Alert notifications**: System-wide alerts for non-field-specific errors and status messages.
+- **Alert types** with distinct colors:
+  - `danger` (red): Critical errors, failed operations, destructive action confirmations
+  - `warning` (amber/yellow): Non-blocking issues, deprecation notices, potential problems
+  - `success` (green): Successful operations, confirmations
+  - `info` (blue): Informational messages, tips, neutral notifications
+- **Alert behavior**:
+  - Toast-style for transient success/info messages (auto-dismiss after 5s)
+  - Persistent banners for warnings requiring acknowledgment
+  - Modal dialogs for critical errors and destructive confirmations
+- **Error recovery**: All error states provide clear recovery actions (retry, dismiss, navigate).
+
+## Configuration Hierarchy
+External service credentials (GitHub, S3/Storage, Gemini) support dual configuration:
+1. **Environment variables** (highest priority): When set, UI fields are disabled with explanation text.
+2. **Database settings** (fallback): Configurable via admin Settings UI when env vars not present.
+
+This allows:
+- Production deployments to use secure env var injection (secrets managers, CI/CD)
+- Development/small deployments to configure via UI without infrastructure changes
+- Clear visibility into which configuration source is active
 
 ## Out-of-Scope (initial)
 - Full-text search implementation (hooks reserved).

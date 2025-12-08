@@ -1,0 +1,5 @@
+export const ANCHOR_PREFIX = 'p-';
+export const ANCHOR_HASH_LENGTH = 16;
+export const ANCHOR_POSITION_TOLERANCE = 3;
+export const ANCHOR_SIMILARITY_THRESHOLD = 0.8;
+export const ANCHOR_ORPHAN_RETENTION_DAYS = 30;

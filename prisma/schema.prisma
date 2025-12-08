@@ -11,18 +11,19 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  name      String?
-  avatarUrl String?
-  role      UserRole @default(USER)
-  banned    Boolean  @default(false)
-  lastLogin DateTime?
-  sessions  Session[]
-  comments  Comment[]
-  threads   CommentThread[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id            String   @id @default(cuid())
+  email         String   @unique
+  name          String?
+  avatarUrl     String?
+  role          UserRole @default(USER)
+  banned        Boolean  @default(false)
+  lastLogin     DateTime?
+  sessions      Session[]
+  comments      Comment[]
+  threads       CommentThread[]
+  uploadedAssets StorageAsset[]
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 }
 
 enum UserRole {
@@ -41,11 +42,13 @@ model Session {
 
 model Page {
   id          String   @id @default(cuid())
+  shortId     String   @unique @db.VarChar(8) // First 8 chars of cuid, used for asset paths
   parent      Page?    @relation("PageToPage", fields: [parentId], references: [id])
   parentId    String?
   children    Page[]   @relation("PageToPage")
   headerImage String?
   locales     PageLocale[]
+  assets      StorageAsset[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
@@ -73,16 +76,18 @@ model PageLocale {
 }
 
 model Anchor {
-  id           String   @id @default(cuid())
+  id           String    @id @default(cuid())
   pageLocale   PageLocale @relation(fields: [pageLocaleId], references: [id])
   pageLocaleId String
-  anchorId     String
-  hash         String
-  index        Int
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  anchorId     String    // Stable identifier (p-{hash})
+  hash         String    // SHA-256 truncated hash of normalized text
+  index        Int       // Position in document
+  orphanedAt   DateTime? // Set when anchor no longer matches content
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
 
   @@unique([pageLocaleId, anchorId])
+  @@index([pageLocaleId, hash])
 }
 
 model CommentThread {
@@ -149,14 +154,27 @@ model SettingGroup {
 }
 
 model StorageAsset {
-  id         String   @id @default(cuid())
-  url        String   @unique
-  filename   String
-  mimeType   String
-  size       Int
-  uploader   User?    @relation(fields: [uploaderId], references: [id])
-  uploaderId String?
-  createdAt  DateTime @default(now())
+  id            String        @id @default(cuid())
+  page          Page?         @relation(fields: [pageId], references: [id])
+  pageId        String?
+  storageType   StorageType   @default(LOCAL)  // Which backend holds the file
+  storagePath   String        // Path within storage (e.g., "ab12cd34/1699876543-image.png")
+  publicUrl     String        // Direct public URL (set at upload time, persists across backend changes)
+  originalName  String        // Original uploaded filename
+  mimeType      String
+  size          Int           // File size in bytes
+  uploader      User?         @relation(fields: [uploaderId], references: [id])
+  uploaderId    String?
+  createdAt     DateTime      @default(now())
+
+  @@unique([storageType, storagePath])
+  @@index([pageId])
+  @@index([storagePath])  // For asset: URL resolution lookups
+}
+
+enum StorageType {
+  LOCAL
+  S3
 }
 
 model SyncLog {

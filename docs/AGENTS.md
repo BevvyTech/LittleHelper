@@ -14,3 +14,10 @@ Scope: entire repository until another `AGENTS.md` overrides.
 10. Prefer the provided Makefile targets (`launch`, `interactive`, `test`, `verify`, `migrate`, `migrate test`) for common workflows so commands stay reproducible across environments.
 11. When refining UI or interaction patterns, consult the `skills` knowledge source if available to ground choices in strong frontend/UX guidance.
 12. Architecture changes and new code must **strictly** align with the Clean Architecture standard defined in `docs/ARCHITECTURE.md`; domain logic stays pure (no framework/IO), use cases orchestrate via interfaces, controllers remain thin, and infrastructure remains swappable.
+
+## Task Tracking Discipline
+
+**CRITICAL**: Mark every finished task as done **immediately** upon completion—do not wait until the end of a run to batch-update task statuses. Even the smallest completed item must be marked done right away. This ensures:
+- Accurate progress visibility at all times
+- Recovery from interruptions without lost progress tracking
+- Clear audit trail of what has been accomplished

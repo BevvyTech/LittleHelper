@@ -39,6 +39,53 @@
 - **Sync Log Viewer**: table with status badges and expandable error details.
 - **Settings Forms**: grouped by tabs with helper text and validation states.
 
+## Error Handling & Notifications
+
+### Inline Form Errors
+- Display directly below the invalid field
+- Red text color with error icon
+- Clear message explaining the issue and how to fix
+- Field border turns red when invalid
+- Errors clear automatically when user starts correcting
+
+### Alert System
+Four semantic alert types with distinct colors:
+
+| Type | Color | Use Case |
+|------|-------|----------|
+| `danger` | Red (#DC2626) | Critical errors, failed operations, destructive confirmations |
+| `warning` | Amber (#D97706) | Non-blocking issues, deprecation notices, potential problems |
+| `success` | Green (#059669) | Successful operations, confirmations |
+| `info` | Blue (#2563EB) | Informational messages, tips, neutral notifications |
+
+### Alert Display Modes
+
+**Toast notifications** (transient):
+- Appear in top-right corner, stacked
+- Auto-dismiss after 5 seconds (configurable)
+- Manual dismiss via close button
+- Used for: success messages, info tips
+- Max 3 visible at once; older ones queued
+
+**Banner alerts** (persistent):
+- Full-width bar at top of content area
+- Requires explicit dismissal
+- Used for: warnings requiring acknowledgment, system status
+- Can include action buttons
+
+**Modal dialogs** (blocking):
+- Centered overlay with backdrop
+- Must be acknowledged to proceed
+- Used for: critical errors, destructive action confirmations
+- Include clear action buttons (Cancel / Confirm)
+
+### Env-Controlled Field States
+When a setting is configured via environment variable:
+- Input field is disabled (greyed out)
+- Label shows lock icon
+- Helper text: "Configured via environment variable"
+- Value shown as masked (for secrets) or visible (for non-sensitive)
+
 ## States & Empty Views
 - Loading skeletons for content and settings.
 - Empty states with CTAs for no comments, no releases, or missing content.

@@ -105,7 +105,257 @@ src/
 2. Router validates release exists; checkout/tag content (cached) and render using release slug map and metadata snapshot.
 
 ### Paragraph Anchors
-- Markdown parsed into blocks. For each block, normalize text (lowercase, strip markup), hash with page ID + locale + block index fallback. Stored in DB and reused across updates by matching similarity and order when content shifts.
+
+#### Algorithm Overview
+Paragraph anchors provide stable identifiers for content blocks, enabling comments to survive minor edits.
+
+#### Step 1: Block Extraction
+```
+1. Parse Markdown into AST (using unified/remark)
+2. Extract top-level blocks: paragraphs, headings, code blocks, lists, blockquotes
+3. Skip empty blocks and metadata-only blocks
+4. Assign sequential position index (0, 1, 2, ...)
+```
+
+#### Step 2: Text Normalization
+```
+For each block:
+1. Strip all Markdown formatting (bold, italic, links, etc.)
+2. Convert to lowercase
+3. Collapse whitespace (multiple spaces/newlines → single space)
+4. Trim leading/trailing whitespace
+5. Remove punctuation for hashing (keep for display)
+Result: normalized plain text string
+```
+
+#### Step 3: Hash Generation
+```
+anchorHash = SHA-256(pageLocaleId + ":" + normalizedText).substring(0, 16)
+anchorId = "p-" + anchorHash
+```
+
+#### Step 4: Anchor Reconciliation (on content update)
+```
+1. Generate new anchors for updated content
+2. For each new anchor:
+   a. Exact match: Find existing anchor with same hash → reuse anchorId
+   b. Fuzzy match: If no exact match, find anchor within ±3 positions
+      with >80% text similarity (Levenshtein ratio) → reuse anchorId
+   c. No match: Create new anchorId
+3. Orphaned anchors (existing but not matched):
+   - Keep in DB for 30 days (comments remain accessible via direct link)
+   - Mark as "orphaned" with timestamp
+   - Cleanup job removes after retention period
+```
+
+#### Edge Cases
+- **Duplicate content**: Same text appearing twice gets unique anchors via position tiebreaker
+- **Block splitting**: When one block splits into two, first half keeps original anchor
+- **Block merging**: When blocks merge, the first block's anchor is preserved
+- **Reordering**: Position tolerance (±3) handles minor reordering without breaking anchors
+
+## API Design
+
+### Architecture Decision: SSR with Direct DB Access
+SSR pages have **direct database access** via Prisma for optimal read performance. This eliminates HTTP overhead for page rendering while keeping mutations through the API for proper validation and side effects.
+
+### Route Structure
+All API routes are mounted under `/api/` prefix on the same Fastify server.
+
+#### Public API (no auth required)
+```
+GET  /api/health                          # Health check
+GET  /api/pages/:locale/:slug             # Page content (for client-side hydration)
+GET  /api/pages/:pageLocaleId/comments    # Comments for a page
+GET  /api/releases                        # List available releases
+GET  /api/releases/:tag                   # Release metadata
+GET  /api/assets/*                        # Asset proxy (when secure mode enabled, requires auth)
+```
+
+#### Authenticated API (session required)
+```
+POST /api/comments                        # Create comment
+DELETE /api/comments/:id                  # Delete own comment
+GET  /api/auth/me                         # Current user info
+POST /api/auth/logout                     # End session
+```
+
+#### Admin API (admin role required)
+```
+# Content Management
+GET    /api/admin/pages                   # List all pages (tree structure)
+GET    /api/admin/pages/:id               # Page details with all locales
+POST   /api/admin/pages                   # Create new page
+PUT    /api/admin/pages/:id               # Update page metadata
+DELETE /api/admin/pages/:id               # Delete page (with redirects)
+PUT    /api/admin/pages/:id/content       # Update Markdown content (triggers Git commit)
+
+# GitHub Sync
+POST   /api/admin/sync/trigger            # Manual sync from GitHub
+GET    /api/admin/sync/status             # Current sync status
+GET    /api/admin/sync/logs               # Sync history
+POST   /api/admin/sync/test-connection    # Test GitHub connection
+
+# Releases
+POST   /api/admin/releases                # Create new release
+DELETE /api/admin/releases/:tag           # Delete release
+
+# Comments Moderation
+GET    /api/admin/comments                # List all comments (with filters)
+DELETE /api/admin/comments/:id            # Delete any comment
+
+# User Management
+GET    /api/admin/users                   # List users
+PUT    /api/admin/users/:id/role          # Change user role
+PUT    /api/admin/users/:id/ban           # Ban/unban user
+
+# Settings
+GET    /api/admin/settings/:group         # Get settings group
+PUT    /api/admin/settings/:group         # Update settings group
+GET    /api/admin/settings/env-status     # Which settings are env-controlled
+
+# Storage
+POST   /api/admin/upload                  # Upload asset (multipart)
+GET    /api/admin/assets                  # List assets
+DELETE /api/admin/assets/:id              # Delete asset
+POST   /api/admin/upload/presign          # Get presigned URL (S3 mode only)
+
+# SEO
+POST   /api/admin/seo/generate/:pageLocaleId  # Generate SEO for page
+POST   /api/admin/seo/generate-all            # Bulk SEO generation
+```
+
+#### Auth Callbacks (OAuth flow)
+```
+GET  /auth/google                         # Initiate Google OAuth
+GET  /auth/google/callback                # OAuth callback handler
+```
+
+### Request/Response Format
+- All API responses use JSON
+- Success responses: `{ data: T }` or `{ data: T, meta: { ... } }` for pagination
+- Error responses: `{ error: { code: string, message: string, details?: Record<string, string> } }`
+- Field validation errors include `details` mapping field names to error messages
+
+### Error Codes
+```
+AUTH_REQUIRED          # No valid session
+AUTH_FORBIDDEN         # Insufficient permissions
+VALIDATION_ERROR       # Request validation failed (check details)
+NOT_FOUND              # Resource not found
+CONFLICT               # Resource conflict (e.g., duplicate slug)
+RATE_LIMITED           # Too many requests
+EXTERNAL_SERVICE_ERROR # GitHub/Gemini/S3 error
+INTERNAL_ERROR         # Unexpected server error
+```
+
+## Storage Architecture
+
+### Design Principles
+1. **Database is source of truth**: Every asset has a DB record tracking its location
+2. **Public by default**: Assets served directly from storage (no server proxy)
+3. **Secure mode optional**: Admin can enable proxied access for private deployments
+4. **Backend-agnostic**: Switching storage backends doesn't break existing references
+
+### Storage Backends
+
+#### Local Storage (Default)
+- Files stored in configurable directory (default: `./uploads/`)
+- Direct file system operations, no external dependencies
+- Public access via Fastify static file handler at `/uploads/*`
+- Suitable for: development, small deployments, single-server setups
+
+#### S3-Compatible Storage
+- Works with AWS S3, DigitalOcean Spaces, MinIO, etc.
+- **Files must be publicly accessible** (public bucket or public ACL on objects)
+- Direct browser access via public URL (no presigned URLs for reads)
+- Upload uses presigned URLs for secure direct-to-S3 uploads
+- Suitable for: production, multi-server, CDN-backed setups
+
+### Asset Database Record
+Every uploaded file creates a `StorageAsset` record containing:
+- `storageType`: Which backend holds the file (LOCAL, S3)
+- `storagePath`: Path within that backend
+- `publicUrl`: Direct access URL (resolved at upload time)
+- File metadata (original name, mime type, size)
+
+This ensures:
+- Assets remain accessible if storage backend changes (old URLs still work)
+- Future storage migrations can update records without breaking references
+- Analytics/audit trail of all uploaded assets
+
+### File Organization
+```
+/{page-short-id}/{timestamp}-{sanitized-filename}
+
+Examples:
+/ab12cd34/1699876543-hero-image.png
+/ab12cd34/1699876600-diagram.svg
+/ef56gh78/1699877000-screenshot.jpg
+```
+
+**Page Short ID**: 8-character identifier (first 8 chars of page's cuid). Remains constant even if page is moved/renamed.
+
+**Timestamp prefix**: Unix timestamp prevents filename collisions and provides natural ordering.
+
+**Sanitized filename**: Original filename with unsafe characters removed/replaced.
+
+### Asset Resolution
+Markdown references assets via syntax:
+```markdown
+![Alt text](asset:ab12cd34/hero-image.png)
+```
+
+At render time:
+1. Look up asset in database by path pattern match
+2. Return `publicUrl` from the asset record
+3. If secure mode enabled, return proxied URL instead
+
+**Public mode** (default):
+- Local: `https://help.example.com/uploads/ab12cd34/1699876543-hero-image.png`
+- S3: `https://cdn.example.com/ab12cd34/1699876543-hero-image.png`
+
+**Secure mode** (when enabled):
+- All backends: `https://help.example.com/api/assets/ab12cd34/1699876543-hero-image.png`
+- Server validates session before streaming file
+- Adds latency but enables private documentation deployments
+
+### Secure Assets Mode
+Admin setting: **"Require authentication for assets"**
+
+When enabled:
+- All asset URLs rewritten to proxy endpoint `/api/assets/*`
+- Proxy validates user session before serving
+- Supports future enterprise SSO integration
+- Works with any storage backend (local or S3)
+
+When disabled (default):
+- Assets served directly from storage
+- No authentication check on asset access
+- Best performance, CDN-friendly
+
+### Storage Configuration Hierarchy
+1. **Environment variables** (highest priority):
+   - `STORAGE_TYPE`: `local` | `s3`
+   - `STORAGE_LOCAL_PATH`: Local storage directory
+   - `STORAGE_S3_ENDPOINT`: S3 endpoint URL
+   - `STORAGE_S3_BUCKET`: Bucket name
+   - `STORAGE_S3_REGION`: AWS region or equivalent
+   - `STORAGE_S3_ACCESS_KEY`: Access key
+   - `STORAGE_S3_SECRET_KEY`: Secret key
+   - `STORAGE_S3_PUBLIC_URL`: Public URL prefix for assets
+   - `STORAGE_SECURE_MODE`: `true` | `false`
+
+2. **Database settings** (fallback): Same fields configurable via admin UI
+
+When env vars are set, corresponding UI fields show "Configured via environment" and are disabled.
+
+### Migration Between Backends
+When switching storage backends:
+1. New uploads go to new backend
+2. Existing assets remain accessible via stored `publicUrl`
+3. Optional: Admin tool to migrate existing assets (copies files, updates records)
+4. Old backend can be decommissioned after full migration
 
 ## Domain Model (logical)
 - `User`: id, email, name, avatar, role (admin/user), banned, lastLogin.
