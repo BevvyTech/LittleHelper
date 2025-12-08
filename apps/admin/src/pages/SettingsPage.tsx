@@ -1,4 +1,7 @@
 import { NavLink, Routes, Route, Navigate } from 'react-router-dom';
+import { ContentSourceSettings } from './settings/ContentSourceSettings.js';
+import { AiSettings as AiSettingsPanel } from './settings/AiSettings.js';
+import { StorageSettings as StorageSettingsPanel } from './settings/StorageSettings.js';
 
 const settingsTabs = [
   { to: '/settings/general', label: 'General' },
@@ -48,29 +51,10 @@ function GeneralSettings() {
   );
 }
 
-function ContentSourceSettings() {
-  return (
-    <div className="settings-section">
-      <h2>Content Source</h2>
-      <p>Configure GitHub repository connection.</p>
-    </div>
-  );
-}
-
 function StorageSettings() {
-  return (
-    <div className="settings-section">
-      <h2>Storage</h2>
-      <p>Configure file storage settings.</p>
-    </div>
-  );
+  return <StorageSettingsPanel />;
 }
 
 function AiSettings() {
-  return (
-    <div className="settings-section">
-      <h2>AI Integrations</h2>
-      <p>Configure Gemini API for SEO generation.</p>
-    </div>
-  );
+  return <AiSettingsPanel />;
 }

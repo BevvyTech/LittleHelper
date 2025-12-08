@@ -1,0 +1,68 @@
+{
+  "info": {
+    "_postman_id": "littlehelper-collection",
+    "name": "LittleHelper API Smoke",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Health",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{BASE_URL}}/healthz"
+      },
+      "response": []
+    },
+    {
+      "name": "Auth - me (unauthorized)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{BASE_URL}}/auth/me"
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Should be unauthorized', function () {",
+              "  pm.response.to.have.status(401);",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Settings - env status",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{BASE_URL}}/api/admin/settings/env-status"
+      },
+      "response": []
+    },
+    {
+      "name": "Comments - list threads for pageLocale",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{BASE_URL}}/api/pages/{{PAGE_LOCALE_ID}}/comments"
+      },
+      "response": []
+    },
+    {
+      "name": "Releases - list",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{BASE_URL}}/api/releases"
+      },
+      "response": []
+    }
+  ],
+  "event": []
+}

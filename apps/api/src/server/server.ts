@@ -49,7 +49,7 @@ async function main() {
   app.setErrorHandler(errorHandler);
 
   // Register routes
-  await registerRoutes(app);
+  await registerRoutes(app, config);
 
   // Start server
   try {

@@ -12,6 +12,7 @@ export interface IStorageGateway {
     mimeType: string
   ): Promise<UploadResult>;
   delete(storagePath: string): Promise<void>;
+  list(prefix: string): Promise<string[]>;
   getPresignedUploadUrl?(
     pageShortId: string,
     filename: string,

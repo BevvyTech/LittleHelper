@@ -19,6 +19,7 @@ export interface UpdatePageLocaleData {
   summary?: string | null;
   keywords?: string[];
   headerImage?: string | null;
+  markdownPath?: string;
   geminiLocked?: boolean;
 }
 

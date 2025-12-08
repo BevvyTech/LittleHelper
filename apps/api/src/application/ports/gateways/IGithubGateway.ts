@@ -15,8 +15,10 @@ export interface IGithubGateway {
 }
 
 export interface IGithubTagGateway {
+  prepareRepo?(workingDir: string): Promise<void>;
   createTag(workingDir: string, tag: string, message: string): Promise<void>;
   listTags(workingDir: string): Promise<string[]>;
   checkoutTag(workingDir: string, tag: string): Promise<void>;
   pushTag(workingDir: string, tag: string): Promise<void>;
+  readFile(workingDir: string, filePath: string): Promise<string>;
 }

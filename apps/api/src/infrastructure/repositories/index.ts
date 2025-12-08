@@ -1,2 +1,11 @@
 export { UserRepositoryPrisma } from './UserRepositoryPrisma.js';
 export { SessionRepositoryPrisma } from './SessionRepositoryPrisma.js';
+export { PageRepositoryPrisma } from './PageRepositoryPrisma.js';
+export { PageLocaleRepositoryPrisma } from './PageLocaleRepositoryPrisma.js';
+export { RedirectRepositoryPrisma } from './RedirectRepositoryPrisma.js';
+export { SettingsRepositoryPrisma } from './SettingsRepositoryPrisma.js';
+export { SyncLogRepositoryPrisma } from './SyncLogRepositoryPrisma.js';
+export { AnchorRepositoryPrisma } from './AnchorRepositoryPrisma.js';
+export { CommentThreadRepositoryPrisma } from './CommentThreadRepositoryPrisma.js';
+export { CommentRepositoryPrisma } from './CommentRepositoryPrisma.js';
+export { ReleaseRepositoryPrisma } from './ReleaseRepositoryPrisma.js';
