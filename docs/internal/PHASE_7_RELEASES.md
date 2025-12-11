@@ -149,7 +149,7 @@ Response: { data: Release[] }
 ## 7.7 Release UI (Admin)
 
 ### Admin Page
-Location: `apps/admin/src/pages/ReleasesPage.tsx`
+Location: `apps/web/src/admin/pages/ReleasesPage.tsx`
 
 **Features:**
 - Table: tag, name, description, created date, page count
@@ -211,7 +211,7 @@ apps/web/src/components/
 ├── ReleaseBadge.tsx
 └── ReleaseNoticeBanner.tsx
 
-apps/admin/src/pages/
+apps/web/src/admin/pages/
 └── ReleasesPage.tsx
 ```
 

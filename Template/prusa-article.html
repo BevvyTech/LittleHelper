@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en" class="dark h-full">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LittleHelper Template — Firmware Update Guide</title>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            ink: { 950: '#0b1624', 900: '#0e1b2b', 800: '#13253d', 700: '#1b324f', 600: '#254369' },
+            accent: { 500: '#4fd1c5', 400: '#7de4da' },
+            sky: { 300: '#a5c8ff' }
+          },
+          fontFamily: {
+            display: ['"Space Grotesk"', 'Inter', 'system-ui', 'sans-serif'],
+            body: ['Inter', 'system-ui', 'sans-serif']
+          },
+          boxShadow: {
+            glow: '0 12px 45px rgba(79,209,197,0.25)'
+          }
+        }
+      }
+    };
+  </script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="assets/base.css" />
+</head>
+<body class="min-h-screen text-slate-100">
+  <div id="toast-stack"></div>
+  <header data-component="top-nav" class="sticky top-0 z-30 border-b border-white/5 bg-ink-900/85 backdrop-blur">
+    <div class="mx-auto flex max-w-screen-2xl items-center gap-6 px-4 py-3">
+      <a href="index.html" class="flex items-center gap-3 text-inherit no-underline">
+        <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-accent-500 to-sky-300 text-ink-950 font-bold text-lg shadow-glow">LH</div>
+        <div>
+          <!-- component: docs shell brand -->
+          <p class="font-display text-xl font-semibold">LittleHelper</p>
+          <p class="text-sm text-slate-300">Docs + Admin in one surface</p>
+        </div>
+      </a>
+      <nav class="hidden items-center gap-6 text-sm text-slate-200/80 md:flex">
+        <a class="hover:text-white" href="index.html">Home</a>
+        <a class="hover:text-white" href="docs-page.html">Docs</a>
+        <a class="hover:text-white" href="release.html">Releases</a>
+        <a class="hover:text-white" href="prusa-product.html">MK4 Support</a>
+      </nav>
+      <div class="ml-auto flex items-center gap-2">
+        <label class="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs uppercase tracking-wide text-slate-400">
+          <span>Locale</span>
+          <select class="bg-transparent text-slate-100 focus:outline-none">
+            <option>English</option>
+            <option>Čeština</option>
+            <option>Deutsch</option>
+            <option>Español</option>
+          </select>
+        </label>
+        <button data-action="toggle-theme" class="rounded-full border border-white/10 bg-white/10 px-3 py-2 text-sm font-medium text-slate-100 hover:bg-white/20">Theme</button>
+        <button data-action="toggle-drawer" data-target="comment-drawer" class="rounded-full border border-accent-500/40 bg-accent-500/10 px-3 py-2 text-sm font-semibold text-accent-100 hover:bg-accent-500/20">Comments</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="mx-auto max-w-screen-2xl px-4 pb-16 pt-8">
+    <div class="flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center gap-3 text-sm text-slate-300">
+        <!-- component: breadcrumbs -->
+        <a class="hover:text-white" href="prusa-product.html">Original Prusa MK4</a>
+        <span class="text-slate-500">/</span>
+        <span class="text-slate-200">Firmware update</span>
+      </div>
+      <div class="flex flex-wrap items-center gap-2 text-sm text-slate-200/90">
+        <span class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs uppercase tracking-wide text-slate-400">Release: help-v1.5</span>
+        <span class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs uppercase tracking-wide text-slate-400">Reading time: 7 min</span>
+      </div>
+    </div>
+
+    <div class="mt-4 grid gap-8 lg:grid-cols-[1.8fr,0.9fr]">
+      <article class="rounded-2xl border border-white/5 bg-ink-900/70 p-6 leading-relaxed">
+        <!-- component: title block -->
+        <h1 class="font-display text-3xl font-semibold">How to update firmware (CORE One L, CORE One, MK4/S, MK3.9/S, MK3.5/S, XL)</h1>
+        <p class="mt-2 text-lg text-slate-300">Step-by-step guide to keep Original Prusa printers on the latest firmware via offline USB, OTA, or after a factory reset.</p>
+
+        <img class="mt-4 w-full max-w-3xl rounded-xl border border-white/5 object-contain" src="https://cdn.help.prusa3d.com/wp-content/uploads/first_print-300x300.png" alt="Firmware update dialog" />
+
+        <section class="mt-8 space-y-6">
+          <div id="offline-usb" class="space-y-3">
+            <h2 class="font-display text-2xl font-semibold">Offline USB Drive procedure</h2>
+            <p class="text-slate-200">Use this when Wi‑Fi is unavailable or you want a clean, air‑gapped update. Download the correct firmware for your model and copy the `.bbf` file to a USB drive.</p>
+            <ol class="list-decimal space-y-2 pl-5 text-slate-200">
+              <li>Download the latest firmware from Prusa’s site (e.g., <a class="underline" href="https://help.prusa3d.com/product/mk4">MK4 support page</a>).</li>
+              <li>Copy the firmware file (e.g., `MK4_firmware_6.4.0.bbf`) to the root of a FAT32 USB drive.</li>
+              <li>Insert the USB drive into the printer, navigate to <strong>Settings → Firmware Update → USB</strong>.</li>
+              <li>Select the file and confirm. The printer will flash the update and prompt for a restart.</li>
+            </ol>
+          </div>
+
+          <div id="ota" class="space-y-3">
+            <h2 class="font-display text-2xl font-semibold">OTA (Over‑The‑Air) firmware update</h2>
+            <p class="text-slate-200">When Wi‑Fi is configured, fetch and install the newest firmware directly from the printer UI.</p>
+            <ul class="list-disc space-y-2 pl-5 text-slate-200">
+              <li>Connect the printer to Wi‑Fi, then open <strong>Settings → Firmware Update → Network</strong>.</li>
+              <li>Check for updates; the latest version and changelog are shown inline.</li>
+              <li>Tap <em>Download</em>, then <em>Install</em>. The device reboots automatically when finished.</li>
+            </ul>
+            <img class="w-full rounded-xl border border-white/5 object-contain" src="https://cdn.help.prusa3d.com/wp-content/uploads/first_print-300x300.png" alt="OTA firmware update UI" />
+          </div>
+
+          <div id="factory-reset" class="space-y-3">
+            <h2 class="font-display text-2xl font-semibold">Factory Reset</h2>
+            <p class="text-slate-200">After a hard factory reset, you must re‑flash firmware from USB because the internal firmware image is cleared.</p>
+            <p class="text-slate-200">Insert a USB drive containing the firmware file, go to <strong>Settings → Firmware Update → USB</strong>, and install as described above. Repeat Wi‑Fi setup if you want OTA updates going forward.</p>
+          </div>
+        </section>
+
+        <section class="mt-10 space-y-4">
+          <h3 class="font-display text-xl font-semibold">Was this article helpful?</h3>
+          <div class="flex items-center gap-3 text-sm text-slate-200">
+            <button class="rounded-full border border-white/10 px-4 py-2 hover:border-accent-500/70">👍 Yes</button>
+            <button class="rounded-full border border-white/10 px-4 py-2 hover:border-accent-500/70">👎 No</button>
+          </div>
+        </section>
+      </article>
+
+      <aside class="space-y-4">
+        <div class="rounded-2xl border border-white/5 bg-ink-900/60 p-5 text-sm">
+          <!-- component: table of contents -->
+          <p class="text-xs uppercase tracking-wide text-slate-400">Contents</p>
+          <div class="mt-3 space-y-2 text-slate-200">
+            <a class="block rounded-lg border border-white/5 px-3 py-2 hover:border-accent-500/60" href="#offline-usb">Offline USB Drive procedure</a>
+            <a class="block rounded-lg border border-white/5 px-3 py-2 hover:border-accent-500/60" href="#ota">OTA firmware update</a>
+            <a class="block rounded-lg border border-white/5 px-3 py-2 hover:border-accent-500/60" href="#factory-reset">Factory Reset</a>
+          </div>
+        </div>
+
+        <div class="rounded-2xl border border-white/5 bg-ink-900/60 p-5 text-sm">
+          <!-- component: useful links -->
+          <p class="text-xs uppercase tracking-wide text-slate-400">Related links</p>
+          <div class="mt-3 space-y-2 text-slate-200">
+            <a class="block hover:text-white" href="prusa-product.html">Original Prusa MK4 support hub</a>
+            <a class="block hover:text-white" href="https://help.prusa3d.com/">All Prusa guides</a>
+            <a class="block hover:text-white" href="https://help.prusa3d.com/collection/firmware_2005">Firmware downloads</a>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <section class="mt-10 rounded-2xl border border-white/5 bg-ink-900/70 p-6">
+      <!-- component: comments preview -->
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="font-display text-xl font-semibold">Community discussion</p>
+          <p class="text-sm text-slate-300">Inline comments stay anchored even as content edits evolve.</p>
+        </div>
+        <button class="rounded-full border border-white/10 px-4 py-2 text-sm" data-action="toggle-drawer" data-target="comment-drawer">Open drawer</button>
+      </div>
+      <div class="mt-4 space-y-4 text-sm text-slate-200">
+        <div class="rounded-xl border border-white/10 bg-white/5 p-4">
+          <div class="flex items-center justify-between text-xs text-slate-400">
+            <span>p-92aa · 10 days ago</span>
+            <span class="rounded-full bg-emerald-500/15 px-3 py-1 text-emerald-100">Open</span>
+          </div>
+          <p class="mt-2 text-slate-100">It would be very useful to be able to upgrade the printer through a hosted link instead of USB. Possible?</p>
+        </div>
+        <div class="rounded-xl border border-white/10 bg-white/5 p-4">
+          <div class="flex items-center justify-between text-xs text-slate-400">
+            <span>p-b31c · 6 months ago</span>
+            <span class="rounded-full bg-amber-500/15 px-3 py-1 text-amber-100">Pending</span>
+          </div>
+          <p class="mt-2 text-slate-100">Has live support chat ended? If not, how can I request support updating firmware issues?</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="comment-drawer" class="fixed right-0 top-0 z-40 flex h-full w-full max-w-lg translate-x-full flex-col border-l border-white/10 bg-ink-900/95 p-6 shadow-2xl transition lg:translate-x-full" data-component="comment-drawer">
+    <div class="flex items-center justify-between">
+      <div>
+        <!-- component: comment drawer header -->
+        <p class="font-display text-xl font-semibold">Threads for anchors</p>
+      </div>
+      <button data-action="toggle-drawer" data-target="comment-drawer" class="rounded-full border border-white/10 px-3 py-2 text-sm">Close</button>
+    </div>
+    <div class="mt-4 space-y-4 overflow-y-auto text-sm text-slate-200">
+      <div class="rounded-xl border border-white/10 bg-white/5 p-4">
+        <div class="flex items-center justify-between text-xs text-slate-300">
+          <span>Anchor p-92aa · en-US</span>
+          <span class="rounded-full bg-emerald-500/15 px-3 py-1 text-emerald-100">Open</span>
+        </div>
+        <p class="mt-2">“Could we fetch firmware via PrusaLink instead of USB?”</p>
+        <div class="mt-3 space-y-2 rounded-lg bg-ink-800/70 p-3 text-xs text-slate-200">
+          <p><strong>Reply (Admin)</strong> — Network fetch is on the roadmap; USB remains the fallback.</p>
+        </div>
+      </div>
+      <div class="rounded-xl border border-white/10 bg-white/5 p-4">
+        <div class="flex items-center justify-between text-xs text-slate-300">
+          <span>Anchor p-b31c · en-US</span>
+          <span class="rounded-full bg-amber-500/15 px-3 py-1 text-amber-100">Pending</span>
+        </div>
+        <p class="mt-2">“Live support chat link is missing from the footer—can we add it?”</p>
+      </div>
+    </div>
+    <div class="mt-auto rounded-xl border border-white/10 bg-ink-800/80 p-4">
+      <p class="text-sm text-slate-200">Add comment to selected anchor</p>
+      <textarea class="mt-2 w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-slate-100" placeholder="Share feedback..." rows="3"></textarea>
+      <div class="mt-3 flex items-center justify-between text-xs text-slate-400">
+        <span>Posting as: admin@littlehelper.dev</span>
+        <button class="rounded-full bg-accent-500 px-4 py-2 text-xs font-semibold text-ink-900 shadow-glow">Submit</button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="border-t border-white/5 bg-ink-900/80 py-6 text-sm text-slate-300 backdrop-blur">
+    <div class="mx-auto flex max-w-screen-2xl items-center justify-between px-4">
+      <div>
+        <!-- component: footer -->
+        <p>Docs render from Git + DB metadata · Shared UI</p>
+      </div>
+      <a class="rounded-full border border-white/10 px-4 py-2 text-xs font-semibold text-slate-100 hover:border-accent-500/80" href="admin-dashboard.html">Go to admin</a>
+    </div>
+  </footer>
+
+  <script src="assets/base.js"></script>
+</body>
+</html>

@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en" class="dark h-full">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LittleHelper Template — MK4 Support Hub</title>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            ink: { 950: '#0b1624', 900: '#0e1b2b', 800: '#13253d', 700: '#1b324f', 600: '#254369' },
+            accent: { 500: '#4fd1c5', 400: '#7de4da' },
+            sky: { 300: '#a5c8ff' }
+          },
+          fontFamily: {
+            display: ['"Space Grotesk"', 'Inter', 'system-ui', 'sans-serif'],
+            body: ['Inter', 'system-ui', 'sans-serif']
+          },
+          boxShadow: {
+            glow: '0 12px 45px rgba(79,209,197,0.25)'
+          }
+        }
+      }
+    };
+  </script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="assets/base.css" />
+</head>
+<body class="min-h-screen text-slate-100">
+  <div id="toast-stack"></div>
+  <header data-component="top-nav" class="sticky top-0 z-30 border-b border-white/5 bg-ink-900/85 backdrop-blur">
+    <div class="mx-auto flex max-w-screen-2xl items-center gap-6 px-4 py-3">
+      <a href="index.html" class="flex items-center gap-3 text-inherit no-underline">
+        <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-accent-500 to-sky-300 text-ink-950 font-bold text-lg shadow-glow">LH</div>
+        <div>
+          <!-- component: product shell brand -->
+          <p class="font-display text-xl font-semibold">LittleHelper</p>
+          <p class="text-sm text-slate-300">Docs + Admin in one surface</p>
+        </div>
+      </a>
+      <nav class="hidden items-center gap-6 text-sm text-slate-200/80 md:flex">
+        <a class="hover:text-white" href="index.html">Home</a>
+        <a class="hover:text-white" href="docs-page.html">Docs</a>
+        <a class="hover:text-white" href="prusa-article.html">Firmware guide</a>
+      </nav>
+      <div class="ml-auto flex items-center gap-2">
+        <label class="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs uppercase tracking-wide text-slate-400">
+          <span>Locale</span>
+          <select class="bg-transparent text-slate-100 focus:outline-none">
+            <option>English</option>
+            <option>Čeština</option>
+            <option>Deutsch</option>
+            <option>Español</option>
+          </select>
+        </label>
+        <button data-action="toggle-theme" class="rounded-full border border-white/10 bg-white/10 px-3 py-2 text-sm font-medium text-slate-100 hover:bg-white/20">Theme</button>
+        <a href="admin-dashboard.html" class="rounded-full bg-accent-500 px-4 py-2 text-sm font-semibold text-ink-900 shadow-glow">Admin</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="mx-auto max-w-screen-2xl px-4 pb-16 pt-8">
+    <div class="flex flex-wrap items-center justify-between gap-4 text-sm text-slate-300">
+      <!-- component: breadcrumbs -->
+      <div class="flex items-center gap-2">
+        <a class="hover:text-white" href="index.html">Support</a>
+        <span class="text-slate-500">/</span>
+        <span class="text-slate-200">Original Prusa MK4</span>
+      </div>
+      <a class="rounded-full border border-white/10 px-3 py-2 text-xs hover:border-accent-500/60" href="https://help.prusa3d.com/product/mk4">View live Prusa page</a>
+    </div>
+
+    <section class="mt-6 rounded-3xl border border-white/5 bg-ink-900/70 p-6 lg:p-8">
+      <!-- component: hero downloads -->
+      <div class="grid gap-6 lg:grid-cols-[1.2fr,0.8fr] lg:items-center">
+        <div class="space-y-3">
+          <p class="text-sm uppercase tracking-wide text-slate-400">Original Prusa MK4 support</p>
+          <h1 class="font-display text-3xl font-semibold">Stay current with firmware, slicer, and handbook.</h1>
+          <p class="text-slate-300">Download the latest stable firmware and PrusaSlicer build, or jump into the handbook for your MK4 printer.</p>
+          <div class="grid gap-3 sm:grid-cols-3">
+            <div class="rounded-xl border border-white/10 bg-white/5 p-4">
+              <p class="text-xs uppercase tracking-wide text-slate-400">Firmware</p>
+              <p class="text-lg font-semibold text-slate-50">6.4.0</p>
+              <p class="text-xs text-slate-400">November 25, 2025</p>
+              <div class="mt-3 flex flex-col gap-2 text-sm">
+                <a class="rounded-full bg-accent-500 px-4 py-2 text-center font-semibold text-ink-900 shadow-glow" href="#">Download</a>
+                <a class="rounded-full border border-white/10 px-4 py-2 text-center font-semibold text-slate-100" href="#">Changelog</a>
+              </div>
+            </div>
+            <div class="rounded-xl border border-white/10 bg-white/5 p-4">
+              <p class="text-xs uppercase tracking-wide text-slate-400">PrusaSlicer</p>
+              <p class="text-lg font-semibold text-slate-50">2.9.4</p>
+              <p class="text-xs text-slate-400">November 26, 2025</p>
+              <div class="mt-3 flex flex-col gap-2 text-sm">
+                <a class="rounded-full bg-white px-4 py-2 text-center font-semibold text-ink-950 shadow-glow border border-white/40" href="#">Download</a>
+                <a class="rounded-full border border-white/10 px-4 py-2 text-center font-semibold text-slate-100" href="#">Changelog</a>
+              </div>
+            </div>
+            <div class="rounded-xl border border-white/10 bg-white/5 p-4">
+              <p class="text-xs uppercase tracking-wide text-slate-400">Handbook</p>
+              <p class="text-lg font-semibold text-slate-50">1.03</p>
+              <p class="text-xs text-slate-400">September 22, 2023</p>
+              <div class="mt-3 flex flex-col gap-2 text-sm">
+                <a class="rounded-full bg-accent-500 px-4 py-2 text-center font-semibold text-ink-900 shadow-glow" href="#">Download</a>
+                <a class="rounded-full border border-white/10 px-4 py-2 text-center font-semibold text-slate-100" href="prusa-article.html">Firmware guide</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="flex justify-end">
+          <img class="w-full max-w-xs rounded-2xl border border-white/10 bg-white/5 object-cover" src="https://cdn.help.prusa3d.com/wp-content/uploads/2023/03/image_20230330_104339690-300x300.png" alt="Prusa MK4 printer" />
+        </div>
+      </div>
+    </section>
+
+    <section class="mt-8 grid gap-6 lg:grid-cols-[1.6fr,1fr]">
+      <div class="space-y-6">
+        <!-- component: assembly cards -->
+        <div class="rounded-2xl border border-white/5 bg-ink-900/70 p-5">
+          <div class="flex items-center justify-between">
+            <p class="font-display text-xl font-semibold">Assemble the Original Prusa MK4</p>
+            <a class="rounded-full border border-white/10 px-3 py-2 text-xs" href="#">See all guides</a>
+          </div>
+          <div class="mt-4 grid gap-4">
+            <div class="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-white/10 bg-white/5 p-4">
+              <div>
+                <p class="font-semibold text-slate-50">MK4 kit assembly (1.01)</p>
+                <p class="text-xs text-slate-400">9 chapters · Moderate</p>
+              </div>
+              <a class="rounded-full bg-accent-500 px-4 py-2 text-sm font-semibold text-ink-900 shadow-glow" href="#">Begin assembly</a>
+            </div>
+            <div class="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-white/10 bg-white/5 p-4">
+              <div>
+                <p class="font-semibold text-slate-50">MK4 ready-to-print checklist</p>
+                <p class="text-xs text-slate-400">5 steps · Easy</p>
+              </div>
+              <a class="rounded-full border border-white/10 px-4 py-2 text-sm font-semibold text-slate-100" href="#">Open checklist</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- component: upgrade path -->
+        <div class="rounded-2xl border border-white/5 bg-ink-900/70 p-5">
+          <div class="flex items-center justify-between">
+            <p class="font-display text-xl font-semibold">Upgrade to MK4 from MK3/MK3S/MK3S+</p>
+            <a class="rounded-full border border-white/10 px-3 py-2 text-xs" href="#">View upgrades</a>
+          </div>
+          <div class="mt-4 space-y-3">
+            <div class="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-white/10 bg-white/5 p-4">
+              <div>
+                <p class="font-semibold text-slate-50">MK3 → MK4 upgrade (1.01)</p>
+                <p class="text-xs text-slate-400">12 chapters · Moderate</p>
+              </div>
+              <a class="rounded-full bg-accent-500 px-4 py-2 text-sm font-semibold text-ink-900 shadow-glow" href="#">Begin upgrade</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- component: articles list -->
+        <div class="rounded-2xl border border-white/5 bg-ink-900/70 p-5">
+          <p class="font-display text-xl font-semibold">Get started with MK4</p>
+          <div class="mt-4 space-y-4">
+            <article class="flex flex-col gap-3 rounded-xl border border-white/10 bg-white/5 p-4 md:flex-row md:items-center">
+              <img class="h-24 w-full rounded-lg border border-white/10 object-cover md:w-40" src="https://cdn.help.prusa3d.com/wp-content/uploads/first_print-300x300.png" alt="PrusaSlicer" />
+              <div class="flex-1">
+                <h3 class="font-semibold text-slate-50">First print with PrusaSlicer</h3>
+                <p class="text-sm text-slate-300">Step-by-step guide to generate gcode/bcode for your first print.</p>
+                <a class="text-sm font-semibold text-accent-400 underline" href="#">Read the article</a>
+              </div>
+            </article>
+            <article class="flex flex-col gap-3 rounded-xl border border-white/10 bg-white/5 p-4 md:flex-row md:items-center">
+              <img class="h-24 w-full rounded-lg border border-white/10 object-cover md:w-40" src="https://cdn.help.prusa3d.com/wp-content/uploads/first_print-300x300.png" alt="Prusa Connect" />
+              <div class="flex-1">
+                <h3 class="font-semibold text-slate-50">Prusa Connect and PrusaLink explained</h3>
+                <p class="text-sm text-slate-300">Remote printing solutions developed in-house for fleet management.</p>
+                <a class="text-sm font-semibold text-accent-400 underline" href="#">Read the article</a>
+              </div>
+            </article>
+            <article class="flex flex-col gap-3 rounded-xl border border-white/10 bg-white/5 p-4 md:flex-row md:items-center">
+              <img class="h-24 w-full rounded-lg border border-white/10 object-cover md:w-40" src="https://cdn.help.prusa3d.com/wp-content/uploads/first_print-300x300.png" alt="Firmware update" />
+              <div class="flex-1">
+                <h3 class="font-semibold text-slate-50">How to update firmware (MK4, XL, MK3.9, MK3.5)</h3>
+                <p class="text-sm text-slate-300">Use offline USB or OTA updates to keep printers secure and current.</p>
+                <a class="text-sm font-semibold text-accent-400 underline" href="prusa-article.html">Read the article</a>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+
+      <div class="space-y-4">
+        <!-- component: useful links -->
+        <div class="rounded-2xl border border-white/5 bg-ink-900/60 p-5 text-sm">
+          <p class="text-xs uppercase tracking-wide text-slate-400">Useful links</p>
+          <div class="mt-3 space-y-2 text-slate-200">
+            <a class="block hover:text-white" href="#">MK4 Community Forum</a>
+            <a class="block hover:text-white" href="#">MK4 Printable Parts</a>
+            <a class="block hover:text-white" href="#">MK4 Spare Parts</a>
+            <a class="block hover:text-white" href="#">Sample G-codes</a>
+          </div>
+        </div>
+
+        <!-- component: topics -->
+        <div class="rounded-2xl border border-white/5 bg-ink-900/60 p-5 text-sm">
+          <p class="text-xs uppercase tracking-wide text-slate-400">Topics</p>
+          <div class="mt-3 space-y-2 text-slate-200">
+            <a class="block hover:text-white" href="#">Printer maintenance</a>
+            <a class="block hover:text-white" href="#">Calibration</a>
+            <a class="block hover:text-white" href="#">About your printer</a>
+            <a class="block hover:text-white" href="#">Using the printer</a>
+            <a class="block hover:text-white" href="#">Troubleshooting</a>
+            <a class="block hover:text-white" href="#">3rd party accessories</a>
+            <a class="block hover:text-white" href="#">PrusaSlicer</a>
+            <a class="block hover:text-white" href="#">Printables</a>
+          </div>
+        </div>
+
+        <!-- component: community posts -->
+        <div class="rounded-2xl border border-white/5 bg-ink-900/60 p-5 text-sm">
+          <p class="text-xs uppercase tracking-wide text-slate-400">Community posts</p>
+          <div class="mt-3 space-y-3 text-slate-200">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="rounded-full bg-white/10 px-3 py-1 text-xs">ENGLISH</span>
+                <span class="text-xs text-slate-400">7 months ago · 3 replies</span>
+              </div>
+              <a class="rounded-full border border-white/10 px-3 py-1 text-xs" href="#">Ask the community</a>
+            </div>
+            <p class="text-slate-300">“Warping on large objects—best bed temperature for PETG?”</p>
+          </div>
+        </div>
+
+        <!-- component: support -->
+        <div class="rounded-2xl border border-white/5 bg-ink-900/60 p-5 text-sm">
+          <p class="font-display text-xl font-semibold">Still need help?</p>
+          <p class="mt-2 text-slate-300">Search topics or reach out to support 24/7.</p>
+          <div class="mt-3 flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="m21 21-4.35-4.35M16.65 16.65A7.5 7.5 0 1 0 6.75 6.75a7.5 7.5 0 0 0 9.9 9.9Z" /></svg>
+            <input class="w-full bg-transparent text-sm placeholder:text-slate-400 focus:outline-none" placeholder="Search for more topics" />
+          </div>
+          <div class="mt-3 flex items-center gap-3">
+            <span class="text-xs text-slate-400">Support languages:</span>
+            <div class="flex flex-wrap gap-1 text-lg">
+              <span>🇨🇿</span><span>🇺🇸</span><span>🇩🇪</span><span>🇪🇸</span><span>🇫🇷</span><span>🇮🇹</span>
+            </div>
+          </div>
+          <div class="mt-3 flex items-center gap-3">
+            <a class="rounded-full border border-white/10 px-4 py-2 text-xs font-semibold text-slate-100 hover:border-accent-500/80" href="#">Contact us</a>
+            <a class="text-xs font-semibold text-accent-400 underline" href="prusa-article.html">Firmware update guide</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="border-t border-white/5 bg-ink-900/80 py-6 text-sm text-slate-300 backdrop-blur">
+    <div class="mx-auto flex max-w-screen-2xl items-center justify-between px-4">
+      <div>
+        <!-- component: footer -->
+        <p>Releases and product hubs ship from the same bundle.</p>
+      </div>
+      <a class="rounded-full border border-white/10 px-4 py-2 text-xs font-semibold text-slate-100 hover:border-accent-500/80" href="admin-dashboard.html">Go to admin</a>
+    </div>
+  </footer>
+
+  <script src="assets/base.js"></script>
+</body>
+</html>

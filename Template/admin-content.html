@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en" class="dark h-full">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LittleHelper Admin Template — Content</title>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            ink: { 950: '#0b1624', 900: '#0e1b2b', 800: '#13253d', 700: '#1b324f', 600: '#254369' },
+            accent: { 500: '#4fd1c5', 400: '#7de4da' },
+            sky: { 300: '#a5c8ff' }
+          },
+          fontFamily: {
+            display: ['"Space Grotesk"', 'Inter', 'system-ui', 'sans-serif'],
+            body: ['Inter', 'system-ui', 'sans-serif']
+          },
+          boxShadow: {
+            glow: '0 12px 45px rgba(79,209,197,0.25)'
+          }
+        }
+      }
+    };
+  </script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="assets/base.css" />
+</head>
+<body class="min-h-screen text-slate-100">
+  <div id="toast-stack"></div>
+  <div class="flex min-h-screen bg-gradient-to-br from-ink-950 via-ink-900 to-ink-900/60">
+    <aside id="admin-sidebar" data-component="admin-sidebar" class="sticky top-0 hidden h-screen w-72 flex-shrink-0 flex-col border-r border-white/5 bg-ink-950/80 px-4 py-6 backdrop-blur lg:flex">
+      <a href="index.html" class="flex items-center gap-3 px-2 text-inherit no-underline">
+        <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-accent-500 to-sky-300 text-ink-950 font-bold">LH</div>
+        <div>
+          <!-- component: admin shell brand -->
+          <p class="font-display text-lg font-semibold">LittleHelper</p>
+          <p class="text-xs text-slate-400">Unified admin</p>
+        </div>
+      </a>
+      <nav class="mt-6 space-y-1 text-sm text-slate-200">
+        <a href="admin-dashboard.html" class="flex items-center gap-3 rounded-xl px-3 py-2 hover:bg-white/5" data-nav="dashboard">Dashboard</a>
+        <a href="admin-content.html" class="flex items-center gap-3 rounded-xl bg-white/10 px-3 py-2 font-semibold text-white" data-nav="content">Content</a>
+        <a href="admin-comments.html" class="flex items-center gap-3 rounded-xl px-3 py-2 hover:bg-white/5" data-nav="comments">Comments</a>
+        <a href="admin-users.html" class="flex items-center gap-3 rounded-xl px-3 py-2 hover:bg-white/5" data-nav="users">Users</a>
+        <a href="admin-tools.html" class="flex items-center gap-3 rounded-xl px-3 py-2 hover:bg-white/5" data-nav="tools">Admin Tools</a>
+        <a href="admin-settings.html" class="flex items-center gap-3 rounded-xl px-3 py-2 hover:bg-white/5" data-nav="settings">Settings</a>
+      </nav>
+      <div class="mt-auto space-y-2 rounded-xl border border-white/10 bg-white/5 p-3 text-xs text-slate-300">
+        <p class="font-semibold text-slate-100">Content source</p>
+        <p>Repo: github.com/littlehelper/docs</p>
+        <p>Branch: main</p>
+        <p>Base folder: docs/</p>
+      </div>
+    </aside>
+
+    <div class="flex min-h-screen flex-1 flex-col">
+      <header data-component="admin-topbar" class="sticky top-0 z-20 flex items-center justify-between border-b border-white/5 bg-ink-900/70 px-4 py-3 backdrop-blur">
+        <div class="flex items-center gap-3">
+          <button data-action="toggle-sidebar" class="rounded-full border border-white/10 px-3 py-2 text-sm text-slate-100 lg:hidden">Menu</button>
+          <div class="rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs text-emerald-100">GitHub App connected</div>
+          <div class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-slate-200">Base folder docs/</div>
+        </div>
+        <div class="flex items-center gap-3">
+          <div class="hidden items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-2 text-sm text-slate-200/80 md:flex">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="m21 21-4.35-4.35M16.65 16.65A7.5 7.5 0 1 0 6.75 6.75a7.5 7.5 0 0 0 9.9 9.9Z" /></svg>
+            <input class="bg-transparent placeholder:text-slate-400 focus:outline-none" placeholder="Search pages" />
+          </div>
+          <button data-action="toggle-theme" class="rounded-full border border-white/10 bg-white/10 px-3 py-2 text-sm font-medium text-slate-100">Theme</button>
+          <div class="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-slate-200">
+            <span class="h-2 w-2 rounded-full bg-blue-400"></span>
+            <span>Auto-save on</span>
+          </div>
+          <img src="https://avatars.githubusercontent.com/u/2?v=4" alt="User" class="h-10 w-10 rounded-full border border-white/10" />
+        </div>
+      </header>
+
+      <main class="flex-1 px-4 pb-12 pt-6">
+        <div class="mb-6 flex flex-wrap items-start justify-between gap-4">
+          <div class="space-y-1">
+            <!-- component: content workspace header -->
+            <h1 class="font-display text-3xl font-semibold">Edit Markdown + metadata</h1>
+            <p class="text-slate-300">Update frontmatter, commit changes to GitHub, and keep anchors resilient.</p>
+          </div>
+          <div class="flex gap-2 text-sm">
+            <button class="rounded-full bg-accent-500 px-4 py-2 font-semibold text-ink-900 shadow-glow" data-demo-toast="success" data-message="Draft saved">Save draft</button>
+            <button class="rounded-full border border-white/15 px-4 py-2 font-semibold text-slate-100" data-demo-toast="info" data-message="Commit prepared">Commit & push</button>
+            <button class="rounded-full border border-white/15 px-4 py-2 font-semibold text-slate-100" data-demo-toast="warning" data-message="Re-index queued">Re-index</button>
+          </div>
+        </div>
+
+        <section class="mt-6 grid gap-6 lg:grid-cols-[1fr,1.3fr]">
+          <div class="space-y-4">
+            <div class="rounded-2xl border border-white/5 bg-ink-900/70 p-5" data-component="content-tree">
+              <div class="flex items-center justify-between">
+                <!-- component: content tree -->
+                <button class="rounded-full border border-white/10 px-3 py-2 text-xs" data-demo-toast="info" data-message="Tree refreshed">Refresh</button>
+              </div>
+              <div class="mt-3 space-y-2 text-sm text-slate-200">
+                <details open class="rounded-lg bg-white/5 p-3">
+                  <summary class="cursor-pointer font-semibold">Platform</summary>
+                  <ul class="mt-2 space-y-1 pl-4 text-slate-300">
+                    <li class="flex items-center justify-between">
+                      <a class="hover:text-white" href="#">Paragraph Anchors</a>
+                      <span class="rounded-full bg-emerald-500/15 px-2 py-1 text-[11px] text-emerald-100">published</span>
+                    </li>
+                    <li class="flex items-center justify-between">
+                      <a class="hover:text-white" href="#">SSR Router</a>
+                      <span class="rounded-full bg-amber-500/15 px-2 py-1 text-[11px] text-amber-100">draft</span>
+                    </li>
+                  </ul>
+                </details>
+                <details class="rounded-lg bg-white/5 p-3">
+                  <summary class="cursor-pointer font-semibold">Storage</summary>
+                  <ul class="mt-2 space-y-1 pl-4 text-slate-300">
+                    <li class="flex items-center justify-between">
+                      <a class="hover:text-white" href="#">S3 mode</a>
+                      <span class="rounded-full bg-blue-500/15 px-2 py-1 text-[11px] text-blue-100">review</span>
+                    </li>
+                  </ul>
+                </details>
+              </div>
+            </div>
+
+            <div class="rounded-2xl border border-white/5 bg-ink-900/70 p-5" data-component="frontmatter">
+              <!-- component: frontmatter form -->
+              <div class="mt-4 grid gap-4 text-sm sm:grid-cols-2">
+                <label class="space-y-2">
+                  <span class="text-slate-300">Title</span>
+                  <input class="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2" placeholder="Paragraph Anchors" />
+                </label>
+                <label class="space-y-2">
+                  <span class="text-slate-300">Slug</span>
+                  <input class="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2" placeholder="platform/anchors" />
+                </label>
+                <label class="space-y-2">
+                  <span class="text-slate-300">Locale</span>
+                  <select class="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2">
+                    <option>en-US</option>
+                    <option>fr-FR</option>
+                  </select>
+                </label>
+                <label class="space-y-2">
+                  <span class="text-slate-300">Parent</span>
+                  <input class="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2" placeholder="platform" />
+                </label>
+                <label class="space-y-2 sm:col-span-2">
+                  <span class="text-slate-300">Header image</span>
+                  <input class="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2" placeholder="anchor-diagram.png" />
+                </label>
+                <label class="space-y-2 sm:col-span-2">
+                  <span class="text-slate-300">Summary</span>
+                  <textarea class="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2" rows="3" placeholder="Gemini-generated summary"></textarea>
+                </label>
+                <label class="space-y-2 sm:col-span-2">
+                  <span class="text-slate-300">Keywords</span>
+                  <input class="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2" placeholder="anchors, comments, stability" />
+                </label>
+              </div>
+              <div class="mt-4 flex flex-wrap gap-3 text-xs text-slate-300">
+                <span class="rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1">Gemini locked</span>
+                <span class="rounded-full border border-white/15 bg-white/5 px-3 py-1">Env overrides disabled</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="space-y-4">
+            <div class="rounded-2xl border border-white/5 bg-ink-900/70 p-5" data-component="markdown-editor">
+              <div class="flex items-center justify-between">
+                <!-- component: markdown editor -->
+                <button class="rounded-full border border-white/10 px-3 py-2 text-xs" data-demo-toast="info" data-message="Preview refreshed">Preview</button>
+              </div>
+              <textarea class="mt-3 h-64 w-full rounded-xl border border-white/10 bg-white/5 p-3 text-sm text-slate-100" placeholder="# Paragraph Anchors
+
+Explain how anchors survive edits..."></textarea>
+              <div class="mt-3 flex flex-wrap gap-2 text-xs text-slate-300">
+                <span class="rounded-full bg-white/10 px-3 py-1">Auto-commit on save</span>
+                <span class="rounded-full bg-white/10 px-3 py-1">Anchor preview enabled</span>
+                <span class="rounded-full bg-white/10 px-3 py-1">Inline comments allowed</span>
+              </div>
+            </div>
+
+            <div class="rounded-2xl border border-white/5 bg-ink-900/70 p-5" data-component="preview">
+              <!-- component: live preview -->
+              <div class="mt-3 space-y-3 rounded-xl border border-white/5 bg-white/5 p-4">
+                <p class="font-display text-xl font-semibold">Paragraph Anchors</p>
+                <p class="text-sm text-slate-300">Stable identifiers ensure comments stay attached even when Markdown changes.</p>
+                <div class="rounded-lg border border-white/10 bg-ink-800/70 p-3 text-xs text-slate-200">
+                  <p>anchorId: p-92aa</p>
+                  <p>hash: sha256(pageLocaleId + normalizedText)</p>
+                  <p>positionTolerance: ±3 blocks</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="rounded-2xl border border-white/5 bg-ink-900/70 p-5" data-component="seo-tools">
+              <!-- component: SEO and redirects -->
+              <div class="mt-3 grid gap-4 text-sm md:grid-cols-2">
+                <div class="space-y-2">
+                  <p class="text-slate-300">SEO actions</p>
+                  <button class="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-3 font-semibold hover:border-accent-500/70" data-demo-toast="success" data-message="Gemini regenerated">Regenerate with Gemini</button>
+                  <button class="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-3 font-semibold hover:border-accent-500/70" data-demo-toast="info" data-message="Summary locked">Lock summary</button>
+                </div>
+                <div class="space-y-2">
+                  <p class="text-slate-300">Redirects</p>
+                  <div class="rounded-lg border border-white/10 bg-white/5 p-3 text-xs text-slate-200">
+                    <p>/anchors → /platform/anchors (en-US)</p>
+                    <p>/ancres → /plateforme/ancres (fr-FR)</p>
+                  </div>
+                  <button class="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-3 font-semibold hover:border-accent-500/70" data-demo-toast="warning" data-message="Redirect review">Review redirects</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+  <script src="assets/base.js"></script>
+</body>
+</html>

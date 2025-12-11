@@ -35,7 +35,7 @@
 ## 6.2 AI Settings UI
 
 ### Admin Settings Tab: AI Integrations
-Location: `apps/admin/src/pages/settings/AiSettings.tsx`
+Location: `apps/web/src/admin/pages/settings/AiSettings.tsx`
 
 **Form fields:**
 | Field | Type |
@@ -145,7 +145,7 @@ apps/api/src/
         ├── SeoController.ts
         └── index.ts
 
-apps/admin/src/pages/settings/
+apps/web/src/admin/pages/settings/
 └── AiSettings.tsx
 
 apps/web/src/components/

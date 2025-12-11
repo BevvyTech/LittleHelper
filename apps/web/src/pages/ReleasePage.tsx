@@ -62,7 +62,7 @@ export function ReleasePage() {
   }
 
   return (
-    <article className="release-page">
+    <article className="release-page page-shell">
       <ReleaseNoticeBanner tag={data.release.tag} onBackToLatest={() => navigate(`/${locale}/${slug}`)} />
       <header className="release-page__header">
         <div>

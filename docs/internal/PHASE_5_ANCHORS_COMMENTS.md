@@ -102,7 +102,7 @@
 ## 5.4 Comment Moderation (Admin)
 
 ### Admin Comments Page
-Location: `apps/admin/src/pages/CommentsPage.tsx`
+Location: `apps/web/src/admin/pages/CommentsPage.tsx`
 
 **Features:**
 - Table view: comment body (truncated), author, page, date, actions
@@ -185,7 +185,7 @@ apps/web/src/
     ├── useComments.ts
     └── useCommentThread.ts
 
-apps/admin/src/pages/
+apps/web/src/admin/pages/
 └── CommentsPage.tsx (update)
 ```
 

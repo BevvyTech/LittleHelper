@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en" class="dark h-full">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LittleHelper Template — Release View</title>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            ink: { 950: '#0b1624', 900: '#0e1b2b', 800: '#13253d', 700: '#1b324f', 600: '#254369' },
+            accent: { 500: '#4fd1c5', 400: '#7de4da' },
+            sky: { 300: '#a5c8ff' }
+          },
+          fontFamily: {
+            display: ['"Space Grotesk"', 'Inter', 'system-ui', 'sans-serif'],
+            body: ['Inter', 'system-ui', 'sans-serif']
+          },
+          boxShadow: {
+            glow: '0 12px 45px rgba(79,209,197,0.25)'
+          }
+        }
+      }
+    };
+  </script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="assets/base.css" />
+</head>
+<body class="min-h-screen text-slate-100">
+  <div id="toast-stack"></div>
+  <header data-component="top-nav" class="sticky top-0 z-30 border-b border-white/5 bg-ink-900/85 backdrop-blur">
+    <div class="mx-auto flex max-w-screen-2xl items-center gap-6 px-4 py-3">
+      <div class="flex items-center gap-3">
+        <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-accent-500 to-sky-300 text-ink-950 font-bold text-lg shadow-glow">LH</div>
+        <div>
+          <!-- component: release shell brand -->
+          <p class="font-display text-xl font-semibold">LittleHelper</p>
+          <p class="text-sm text-slate-300">Docs + Admin in one surface</p>
+        </div>
+      </div>
+      <nav class="hidden items-center gap-6 text-sm text-slate-200/80 md:flex">
+        <a class="hover:text-white" href="index.html">Home</a>
+        <a class="hover:text-white" href="docs-page.html">Docs</a>
+        <a class="hover:text-white" href="release.html">Releases</a>
+      </nav>
+      <div class="ml-auto flex items-center gap-2">
+        <label class="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs uppercase tracking-wide text-slate-400">
+          <span>Tag</span>
+          <select class="bg-transparent text-slate-100 focus:outline-none">
+            <option>help-v1.5 (draft)</option>
+            <option>help-v1.4</option>
+            <option>help-v1.3</option>
+          </select>
+        </label>
+        <button data-action="toggle-theme" class="rounded-full border border-white/10 bg-white/10 px-3 py-2 text-sm font-medium text-slate-100 hover:bg-white/20">Theme</button>
+        <a href="admin-tools.html" class="rounded-full bg-accent-500 px-4 py-2 text-sm font-semibold text-ink-900 shadow-glow">Admin tools</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="mx-auto max-w-screen-2xl px-4 pb-16 pt-8">
+    <section class="rounded-3xl border border-white/5 bg-gradient-to-br from-ink-900/95 via-ink-800/70 to-ink-900/80 p-8">
+      <div class="flex flex-wrap items-start justify-between gap-6">
+        <div class="space-y-3">
+          <!-- component: release overview -->
+          <h1 class="font-display text-3xl font-semibold">Release help-v1.5 (draft)</h1>
+          <p class="text-lg text-slate-300">Snapshot of slug map, anchors, and metadata for every locale. Use /releases/help-v1.5/:locale/:slug to preview.</p>
+          <div class="flex flex-wrap items-center gap-3 text-xs text-slate-300">
+            <span class="rounded-full border border-white/10 bg-white/5 px-3 py-1">Created Oct 20, 2024</span>
+            <span class="rounded-full border border-white/10 bg-white/5 px-3 py-1">12 / 20 pages mapped</span>
+            <span class="rounded-full border border-white/10 bg-white/5 px-3 py-1">Status: Draft</span>
+          </div>
+          <div class="flex flex-wrap gap-3">
+            <button class="rounded-full bg-accent-500 px-5 py-3 text-sm font-semibold text-ink-900 shadow-glow" data-demo-toast="success" data-message="Publish queued">Publish draft</button>
+            <button class="rounded-full border border-white/15 px-5 py-3 text-sm font-semibold text-slate-100" data-demo-toast="info" data-message="Snapshot refreshed">Refresh snapshot</button>
+            <button class="rounded-full border border-white/15 px-5 py-3 text-sm font-semibold text-slate-100" data-demo-toast="warning" data-message="Redirect review required">Review redirects</button>
+          </div>
+        </div>
+        <div class="grid w-full max-w-md gap-3 sm:grid-cols-2">
+          <div class="rounded-xl border border-white/5 bg-white/5 p-4">
+            <p class="text-sm text-slate-300">Pages</p>
+            <p class="font-display text-2xl font-semibold text-slate-50">20 total</p>
+            <p class="text-xs text-slate-400">12 mapped · 8 pending</p>
+          </div>
+          <div class="rounded-xl border border-white/5 bg-white/5 p-4">
+            <p class="text-sm text-slate-300">Locales</p>
+            <p class="font-display text-2xl font-semibold text-slate-50">3</p>
+            <p class="text-xs text-slate-400">en-US · fr-FR · de-DE</p>
+          </div>
+          <div class="rounded-xl border border-white/5 bg-white/5 p-4">
+            <p class="text-sm text-slate-300">Redirects</p>
+            <p class="font-display text-2xl font-semibold text-slate-50">5</p>
+            <p class="text-xs text-slate-400">Review before publish</p>
+          </div>
+          <div class="rounded-xl border border-white/5 bg-white/5 p-4">
+            <p class="text-sm text-slate-300">Sync state</p>
+            <p class="font-display text-2xl font-semibold text-accent-400">Clean</p>
+            <p class="text-xs text-slate-400">Git tag not created yet</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="mt-8 grid gap-6 lg:grid-cols-[1.7fr,1fr]">
+      <div class="rounded-2xl border border-white/5 bg-ink-900/70 p-6" data-component="release-table">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <!-- component: slug map table -->
+            <h2 class="font-display text-xl font-semibold">Snapshot entries</h2>
+          </div>
+          <button class="rounded-full border border-white/10 px-3 py-2 text-xs" data-demo-toast="info" data-message="Exported to CSV">Export</button>
+        </div>
+        <div class="mt-4 overflow-hidden rounded-xl border border-white/5">
+          <table class="w-full text-sm">
+            <thead class="bg-white/5 text-left text-slate-300">
+              <tr>
+                <th class="px-4 py-3">Locale</th>
+                <th class="px-4 py-3">Slug at release</th>
+                <th class="px-4 py-3">Canonical page</th>
+                <th class="px-4 py-3">Status</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-white/5">
+              <tr class="bg-white/2">
+                <td class="px-4 py-3 text-slate-200">en-US</td>
+                <td class="px-4 py-3 text-slate-50">platform/anchors</td>
+                <td class="px-4 py-3 text-slate-300">Paragraph Anchors</td>
+                <td class="px-4 py-3"><span class="rounded-full bg-emerald-500/15 px-3 py-1 text-xs font-semibold text-emerald-100">Ready</span></td>
+              </tr>
+              <tr>
+                <td class="px-4 py-3 text-slate-200">fr-FR</td>
+                <td class="px-4 py-3 text-slate-50">plateforme/ancres</td>
+                <td class="px-4 py-3 text-slate-300">Paragraph Anchors</td>
+                <td class="px-4 py-3"><span class="rounded-full bg-amber-500/15 px-3 py-1 text-xs font-semibold text-amber-100">Translation pending</span></td>
+              </tr>
+              <tr>
+                <td class="px-4 py-3 text-slate-200">de-DE</td>
+                <td class="px-4 py-3 text-slate-50">plattform/anker</td>
+                <td class="px-4 py-3 text-slate-300">Paragraph Anchors</td>
+                <td class="px-4 py-3"><span class="rounded-full bg-emerald-500/15 px-3 py-1 text-xs font-semibold text-emerald-100">Ready</span></td>
+              </tr>
+              <tr>
+                <td class="px-4 py-3 text-slate-200">en-US</td>
+                <td class="px-4 py-3 text-slate-50">storage/s3</td>
+                <td class="px-4 py-3 text-slate-300">S3 Storage</td>
+                <td class="px-4 py-3"><span class="rounded-full bg-blue-500/15 px-3 py-1 text-xs font-semibold text-blue-100">QA</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+        <div class="space-y-4">
+          <div class="rounded-2xl border border-white/5 bg-ink-900/60 p-5" data-component="release-timeline">
+            <!-- component: release timeline -->
+            <ol class="mt-4 space-y-3 text-sm text-slate-200">
+            <li class="flex items-start gap-3">
+              <span class="mt-1 h-2 w-2 rounded-full bg-emerald-400"></span>
+              <div>
+                <p class="font-semibold">Snapshot drafted</p>
+                <p class="text-slate-400">Git content fetched from branch main</p>
+              </div>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="mt-1 h-2 w-2 rounded-full bg-blue-400"></span>
+              <div>
+                <p class="font-semibold">SEO locked</p>
+                <p class="text-slate-400">Gemini summaries frozen for release</p>
+              </div>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="mt-1 h-2 w-2 rounded-full bg-amber-400"></span>
+              <div>
+                <p class="font-semibold">Redirects pending</p>
+                <p class="text-slate-400">5 slugs changed · needs review</p>
+              </div>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="mt-1 h-2 w-2 rounded-full bg-slate-400"></span>
+              <div>
+                <p class="font-semibold">Publish</p>
+                <p class="text-slate-400">Tag help-v1.5 + DB snapshot</p>
+              </div>
+            </li>
+          </ol>
+        </div>
+        <div class="rounded-2xl border border-white/5 bg-ink-900/60 p-5" data-component="redirects">
+          <!-- component: redirect review -->
+          <div class="mt-3 space-y-3 text-sm text-slate-200">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="font-semibold">/deployments/ci → /platform/ci</p>
+                <p class="text-xs text-slate-400">Locale: en-US · Created: Oct 18</p>
+              </div>
+              <span class="rounded-full bg-amber-500/15 px-3 py-1 text-xs text-amber-100">Review</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="font-semibold">/securite/s3 → /storage/s3</p>
+                <p class="text-xs text-slate-400">Locale: fr-FR · Created: Oct 16</p>
+              </div>
+              <span class="rounded-full bg-emerald-500/15 px-3 py-1 text-xs text-emerald-100">Approved</span>
+            </div>
+          </div>
+        </div>
+        <div class="rounded-2xl border border-white/5 bg-ink-900/60 p-5" data-component="release-actions">
+          <!-- component: release controls -->
+          <div class="mt-3 space-y-2 text-sm text-slate-300">
+            <button class="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-3 font-semibold hover:border-accent-500/70" data-demo-toast="info" data-message="Preview link copied">Copy preview link</button>
+            <button class="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-3 font-semibold hover:border-accent-500/70" data-demo-toast="warning" data-message="Rollback would delete tag">Rollback release</button>
+            <button class="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-3 font-semibold hover:border-accent-500/70" data-demo-toast="success" data-message="Release saved">Save draft</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="border-t border-white/5 bg-ink-900/80 py-6 text-sm text-slate-300 backdrop-blur">
+    <div class="mx-auto flex max-w-screen-2xl items-center justify-between px-4">
+      <div>
+        <!-- component: footer -->
+        <p>Releases served from same bundle · Version selector above</p>
+      </div>
+      <a class="rounded-full border border-white/10 px-4 py-2 text-xs font-semibold text-slate-100 hover:border-accent-500/80" href="admin-tools.html">Open admin tools</a>
+    </div>
+  </footer>
+
+  <script src="assets/base.js"></script>
+</body>
+</html>

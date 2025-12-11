@@ -223,5 +223,3 @@ export class SyncFromGithubUseCase {
     };
   }
 }
-
-export { getWorkingDir };

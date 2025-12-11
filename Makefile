@@ -9,7 +9,7 @@ PORT ?= 3333
 DATABASE_URL ?= postgres://dictator@127.0.0.1:5432/little-helper
 APP_URL ?= http://localhost:3333
 SESSION_SECRET ?= $(shell python3 -c "import secrets; print(secrets.token_hex(32))" 2>/dev/null || true)
-DEV_SERVICES ?= api web admin
+DEV_SERVICES ?= api web
 REQUIRED_ENV ?= DATABASE_URL SESSION_SECRET APP_URL
 ENV_FILE ?= .env
 
@@ -22,38 +22,32 @@ export SESSION_SECRET
 .PHONY: help launch interactive install env test verify migrate migrate-test check-pnpm ensure-schema e2e
 
 help:
-@printf "LittleHelper helper targets:\n"
-  @printf "  make launch        # Install (if needed) and start dev servers (api/web/admin)\n"
-  @printf "  make interactive   # Alias for launch with verbose logging for local tinkering\n"
-  @printf "  make install       # Install workspace dependencies via pnpm\n"
-  @printf "  make env           # Create/update .env with required values (generates SESSION_SECRET)\n"
-  @printf "  make test          # Run workspace test suites via pnpm\n"
-  @printf "  make verify        # Production-style build to ensure assets compile\n"
-  @printf "  make migrate       # Apply Prisma migrations against DATABASE_URL\n"
-  @printf "  make migrate test  # Validate migrations against TEST_DATABASE_URL (or derived)\n"
-  @printf "  make e2e           # Run Playwright and API smoke tests (requires env + running app)\n"
+	@printf "LittleHelper helper targets:\n"
+	@printf "  make launch        # Install (if needed) and start dev servers (api + web with admin area)\n"
+	@printf "  make interactive   # Alias for launch with verbose logging for local tinkering\n"
+	@printf "  make install       # Install workspace dependencies via pnpm\n"
+	@printf "  make env           # Create/update .env with required values (generates SESSION_SECRET)\n"
+	@printf "  make test          # Run workspace test suites via pnpm\n"
+	@printf "  make verify        # Production-style build to ensure assets compile\n"
+	@printf "  make migrate       # Apply Prisma migrations against DATABASE_URL\n"
+	@printf "  make migrate test  # Validate migrations against TEST_DATABASE_URL (or derived)\n"
+	@printf "  make e2e           # Run Playwright and API smoke tests (requires env + running app)\n"
 
 check-pnpm:
 	@command -v $(PNPM) >/dev/null 2>&1 || { echo "pnpm is required (install via corepack enable)" >&2; exit 1; }
 
 ensure-schema:
-@if [ ! -f "$(PRISMA_SCHEMA)" ]; then \
-  echo "Prisma schema not found at $(PRISMA_SCHEMA)." >&2; \
-  exit 1; \
-  fi
+	@if [ ! -f "$(PRISMA_SCHEMA)" ]; then \
+	  echo "Prisma schema not found at $(PRISMA_SCHEMA)." >&2; \
+	  exit 1; \
+	  fi
 
 env:
 	@set -euo pipefail; \
 	if [ ! -f "$(ENV_FILE)" ]; then \
 	  echo "Creating $(ENV_FILE) with defaults..."; \
 	  SECRET="$${SESSION_SECRET:-$$(python3 -c 'import secrets; print(secrets.token_hex(32))' 2>/dev/null || true)}"; \
-	  cat > "$(ENV_FILE)" <<EOF
-DATABASE_URL=$(DATABASE_URL)
-SESSION_SECRET=$$SECRET
-APP_URL=$(APP_URL)
-HOST=$(HOST)
-PORT=$(PORT)
-EOF
+	  printf "DATABASE_URL=%s\nSESSION_SECRET=%s\nAPP_URL=%s\nHOST=%s\nPORT=%s\n" "$(DATABASE_URL)" "$$SECRET" "$(APP_URL)" "$(HOST)" "$(PORT)" > "$(ENV_FILE)"; \
 	else \
 	  UPDATED=0; \
 	  if ! grep -q '^SESSION_SECRET=' "$(ENV_FILE)"; then \
@@ -87,7 +81,26 @@ launch: check-pnpm env
 	$(PNPM) install --recursive; \
 	fi; \
 	echo "Starting dev servers for $(DEV_SERVICES)..."; \
-	$(PNPM) --recursive --if-present run dev
+	set -m; \
+	$(PNPM) --recursive --if-present run dev & DEV_PID=$$!; \
+	CLEANUP_DONE=0; \
+	cleanup() { \
+	  if [ $$CLEANUP_DONE -eq 1 ]; then return; fi; \
+	  CLEANUP_DONE=1; \
+	  echo "Stopping dev servers..."; \
+	  kill -INT -$$DEV_PID 2>/dev/null || true; \
+	  for _ in 1 2 3 4 5; do \
+	    if ! kill -0 $$DEV_PID 2>/dev/null; then break; fi; \
+	    sleep 1; \
+	  done; \
+	  if kill -0 $$DEV_PID 2>/dev/null; then \
+	    kill -TERM -$$DEV_PID 2>/dev/null || true; \
+	  fi; \
+	  wait $$DEV_PID 2>/dev/null || true; \
+	}; \
+	trap 'cleanup; exit 0' INT TERM; \
+	trap cleanup EXIT; \
+	wait $$DEV_PID
 
 interactive: check-pnpm
 	@VERBOSE_DEV=1 $(MAKE) launch
@@ -133,7 +146,7 @@ migrate: check-pnpm ensure-schema
 	echo "DATABASE_URL is required for migrations." >&2; \
 	exit 1; \
 	fi; \
-	DATABASE_URL="$(DATABASE_URL)" $(PNPM) exec prisma migrate dev --schema "$(PRISMA_SCHEMA)" --skip-seed
+	DATABASE_URL="$(DATABASE_URL)" $(PNPM) exec prisma migrate deploy --schema "$(PRISMA_SCHEMA)"
 
 migrate-test: check-pnpm ensure-schema
 	@set -euo pipefail; \

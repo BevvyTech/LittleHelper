@@ -17,7 +17,7 @@ LittleHelper is a hybrid documentation/help platform modeled after premium hardw
 - Releases created by tagging the Git repository (e.g., `help-vX.Y`); content for releases fetched by checking out tag in a read-only mode.
 - Google OAuth client IDs/secrets are configured per environment; only Google SSO is enabled (no local/password login).
 - **Storage is dual-mode**: local filesystem by default, S3-compatible (AWS S3, DigitalOcean Spaces, MinIO) when configured. Credentials configurable via environment variables OR admin settings UI (env vars take precedence).
-- SSR uses Vite + React + Fastify (Node 20+). Admin CSR bundled separately but shares component library.
+- SSR uses Vite + React + Fastify (Node 20+). Admin CSR lives under `/admin` within the same web bundle and shares the component library.
 - **SSR has direct database access** for optimal performance; API routes used for mutations and admin operations.
 - Clean Architecture is mandatory: domain entities remain pure (no IO/framework), application use cases orchestrate via ports, interface adapters implement DB/service gateways, and server/Vite/Prisma live in the outer layer only.
 - Prisma migration system owns database schema; `prisma migrate` used for changes.
@@ -114,4 +114,3 @@ This allows:
 - Full-text search implementation (hooks reserved).
 - Detailed analytics/dashboarding.
 - Non-Google authentication providers.
-

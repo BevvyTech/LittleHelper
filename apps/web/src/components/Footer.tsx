@@ -13,6 +13,12 @@ export function Footer() {
   return (
     <footer className="footer">
       <div className="footer__container">
+        <div className="footer__brand">
+          <Link to="/" className="footer__link">
+            LittleHelper
+          </Link>
+        </div>
+
         <div className="footer__nav">
           <Link to="/" className="footer__link">
             Docs
@@ -31,15 +37,18 @@ export function Footer() {
           </Link>
         </div>
 
-        {currentSlug && (
-          <div className="footer__selector">
+        <div className="footer__controls">
+          {currentSlug && (
             <VersionSelector
               currentLocale={currentLocale}
               currentSlug={currentSlug}
               currentTag={currentTag}
             />
-          </div>
-        )}
+          )}
+          <button type="button" className="footer__pill" aria-label="Switch locale">
+            {currentLocale?.toUpperCase() || 'EN'}
+          </button>
+        </div>
 
         <div className="footer__copyright">
           &copy; {year} LittleHelper

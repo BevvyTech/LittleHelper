@@ -1,6 +1,6 @@
 # LittleHelper
 
-A hybrid documentation/help platform combining Git-hosted Markdown with PostgreSQL metadata, SSR public experience, and CSR admin console. Designed for premium software vendor help centers.
+A hybrid documentation/help platform combining Git-hosted Markdown with PostgreSQL metadata, SSR public experience, and an in-app CSR admin console. Designed for premium software vendor help centers.
 
 ## Features
 
@@ -10,7 +10,8 @@ A hybrid documentation/help platform combining Git-hosted Markdown with PostgreS
 - **Release versioning**: Tag-based snapshots for versioned documentation
 - **SEO optimization**: AI-powered summaries and keywords via Gemini
 - **Flexible storage**: Local filesystem or S3-compatible (AWS, DigitalOcean Spaces, MinIO)
-- **Responsive UI**: SSR public pages, CSR admin console, dark/light themes
+- **Responsive UI**: SSR public pages with an in-app CSR admin console, dark/light themes
+- **Spec-driven UI**: Modern shared design system for docs and admin (see `docs/internal/INTERFACE_PLAN.md`)
 
 ## Prerequisites
 
@@ -61,7 +62,7 @@ See `.env.example` for complete list with descriptions.
 ## Development
 
 ```bash
-# Start all dev servers (API, Web SSR, Admin CSR)
+# Start all dev servers (API + Web SSR with embedded Admin)
 make launch
 
 # Run tests
@@ -81,8 +82,7 @@ make migrate-test      # Validate against test DB
 littlehelper/
 ├── apps/
 │   ├── api/          # Fastify backend (API + SSR serving)
-│   ├── web/          # React SSR public pages
-│   └── admin/        # React CSR admin console
+│   └── web/          # React SSR public pages and admin console (under /admin)
 ├── packages/
 │   ├── shared/       # Shared types, Zod schemas, utilities
 │   └── ui/           # Shared component library

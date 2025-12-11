@@ -148,7 +148,7 @@
 
 ### Storage Settings UI
 
-Location: `apps/admin/src/pages/settings/StorageSettings.tsx`
+Location: `apps/web/src/admin/pages/settings/StorageSettings.tsx`
 
 **Form fields:**
 | Field | Type | Validation |
@@ -187,7 +187,7 @@ Location: `apps/admin/src/pages/settings/StorageSettings.tsx`
 ## 8.4 User Management
 
 ### Admin Page
-Location: `apps/admin/src/pages/UsersPage.tsx`
+Location: `apps/web/src/admin/pages/UsersPage.tsx`
 
 **Table columns:**
 | Column | Content |
@@ -222,7 +222,7 @@ Location: `apps/admin/src/pages/UsersPage.tsx`
 ## 8.5 Admin Tools
 
 ### Admin Page
-Location: `apps/admin/src/pages/ToolsPage.tsx`
+Location: `apps/web/src/admin/pages/ToolsPage.tsx`
 
 **Tool Cards:**
 
@@ -354,7 +354,7 @@ apps/web/src/
 │   ├── ThemeToggle.tsx
 │   └── ResponsiveBreadcrumbs.tsx
 
-apps/admin/src/
+apps/web/src/admin/
 ├── components/
 │   ├── Sidebar.tsx (collapsible)
 │   ├── MobileAdminHeader.tsx

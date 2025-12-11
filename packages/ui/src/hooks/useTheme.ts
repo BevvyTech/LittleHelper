@@ -1,13 +1,13 @@
 import { useCallback, useEffect, useState } from 'react';
+import type { ThemePreference, ButtonShape } from '../theme.js';
 
-export type Theme = 'light' | 'dark' | 'auto';
-export type ButtonShape = 'pill' | 'rounded';
+export type Theme = ThemePreference;
 
 const THEME_STORAGE_KEY = 'littlehelper-theme';
 const BUTTON_SHAPE_STORAGE_KEY = 'littlehelper-button-shape';
 
 export function useTheme() {
-  const [theme, setThemeState] = useState<Theme>('auto');
+  const [theme, setThemeState] = useState<ThemePreference>('auto');
   const [buttonShape, setButtonShapeState] = useState<ButtonShape>('rounded');
 
   useEffect(() => {

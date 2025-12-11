@@ -30,7 +30,7 @@
 ## 4.2 Content Source Settings UI
 
 ### Admin Settings Tab: Content Source
-Location: `apps/admin/src/pages/settings/ContentSourceSettings.tsx`
+Location: `apps/web/src/admin/pages/settings/ContentSourceSettings.tsx`
 
 **Form fields:**
 | Field | Type | Validation |
@@ -113,7 +113,7 @@ Location: `apps/api/src/infrastructure/markdown/`
 ## 4.4 Content Management UI
 
 ### Admin Content Page
-Location: `apps/admin/src/pages/ContentPage.tsx`
+Location: `apps/web/src/admin/pages/ContentPage.tsx`
 
 **Views:**
 1. **Tree view** - hierarchical list of pages with expand/collapse
@@ -182,7 +182,7 @@ apps/api/src/
 │       ├── PagesController.ts
 │       └── index.ts
 
-apps/admin/src/
+apps/web/src/admin/
 ├── pages/
 │   ├── ContentPage.tsx (update)
 │   └── settings/

@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en" class="dark h-full">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LittleHelper Template — Docs Page</title>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            ink: { 950: '#0b1624', 900: '#0e1b2b', 800: '#13253d', 700: '#1b324f', 600: '#254369' },
+            accent: { 500: '#4fd1c5', 400: '#7de4da' },
+            sky: { 300: '#a5c8ff' }
+          },
+          fontFamily: {
+            display: ['"Space Grotesk"', 'Inter', 'system-ui', 'sans-serif'],
+            body: ['Inter', 'system-ui', 'sans-serif']
+          },
+          boxShadow: {
+            glow: '0 12px 45px rgba(79,209,197,0.25)'
+          }
+        }
+      }
+    };
+  </script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="assets/base.css" />
+</head>
+<body class="min-h-screen text-slate-100">
+  <div id="toast-stack"></div>
+  <header data-component="top-nav" class="sticky top-0 z-30 border-b border-white/5 bg-ink-900/85 backdrop-blur">
+    <div class="mx-auto flex max-w-screen-2xl items-center gap-6 px-4 py-3">
+      <div class="flex items-center gap-3">
+        <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-accent-500 to-sky-300 text-ink-950 font-bold text-lg shadow-glow">LH</div>
+        <div>
+          <!-- component: docs shell brand -->
+          <p class="font-display text-xl font-semibold">LittleHelper</p>
+          <p class="text-sm text-slate-300">Docs + Admin in one surface</p>
+        </div>
+      </div>
+      <nav class="hidden items-center gap-6 text-sm text-slate-200/80 md:flex">
+        <a class="hover:text-white" href="index.html">Home</a>
+        <a class="hover:text-white" href="docs-page.html">Docs</a>
+        <a class="hover:text-white" href="release.html">Releases</a>
+      </nav>
+      <div class="ml-auto flex items-center gap-2">
+        <div class="hidden items-center gap-2 rounded-full border border-white/5 bg-white/5 px-3 py-2 text-sm text-slate-200/80 lg:flex">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="m21 21-4.35-4.35M16.65 16.65A7.5 7.5 0 1 0 6.75 6.75a7.5 7.5 0 0 0 9.9 9.9Z" /></svg>
+          <input class="bg-transparent placeholder:text-slate-400 focus:outline-none" placeholder="Search docs" />
+        </div>
+        <button data-action="toggle-theme" class="rounded-full border border-white/10 bg-white/10 px-3 py-2 text-sm font-medium text-slate-100 hover:bg-white/20">Theme</button>
+        <button data-action="toggle-drawer" data-target="comment-drawer" class="rounded-full border border-accent-500/40 bg-accent-500/10 px-3 py-2 text-sm font-semibold text-accent-100 hover:bg-accent-500/20">Comments</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="mx-auto max-w-screen-2xl px-4 pb-16 pt-8">
+    <div class="flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center gap-3 text-sm text-slate-300">
+        <!-- component: breadcrumbs -->
+        <a class="hover:text-white" href="index.html">Docs</a>
+        <span class="text-slate-500">/</span>
+        <a class="hover:text-white" href="#">Platform</a>
+        <span class="text-slate-500">/</span>
+        <span class="text-slate-200">Paragraph Anchors</span>
+      </div>
+      <div class="flex flex-wrap items-center gap-2 text-sm text-slate-200/90">
+        <label class="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1">
+          <span class="text-xs uppercase tracking-wide text-slate-400">Locale</span>
+          <select class="bg-transparent focus:outline-none">
+            <option>en-US</option>
+            <option>fr-FR</option>
+            <option>de-DE</option>
+          </select>
+        </label>
+        <label class="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1">
+          <span class="text-xs uppercase tracking-wide text-slate-400">Version</span>
+          <select class="bg-transparent focus:outline-none">
+            <option>Latest</option>
+            <option>help-v1.5</option>
+            <option>help-v1.4</option>
+          </select>
+        </label>
+      </div>
+    </div>
+
+    <section class="mt-6 rounded-2xl border border-white/5 bg-ink-900/70 p-6">
+      <div class="flex flex-wrap items-start justify-between gap-4">
+        <div class="space-y-3">
+          <!-- component: title block -->
+          <h1 class="font-display text-3xl font-semibold">Paragraph Anchors: Stable Comment Targets</h1>
+          <p class="text-lg text-slate-300">How we generate resilient paragraph anchors so inline comments survive edits.</p>
+          <div class="flex flex-wrap items-center gap-3 text-xs text-slate-300">
+            <span class="rounded-full border border-white/10 bg-white/5 px-3 py-1">Last updated: 2024-10-12</span>
+            <span class="rounded-full border border-white/10 bg-white/5 px-3 py-1">Release: help-v1.4</span>
+            <span class="rounded-full border border-white/10 bg-white/5 px-3 py-1">Reading time: 8 min</span>
+          </div>
+        </div>
+        <div class="rounded-xl border border-white/5 bg-white/5 p-4 text-sm text-slate-200">
+          <p class="font-semibold">Frontmatter</p>
+          <p>title: Paragraph Anchors</p>
+          <p>slug: platform/anchors</p>
+          <p>locale: en-US</p>
+          <p>parent: platform</p>
+          <p>headerImage: anchor-diagram.png</p>
+          <p>summary: Gemini-generated (locked)</p>
+        </div>
+      </div>
+      <div class="mt-4 overflow-hidden rounded-xl border border-white/5">
+        <img src="https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?auto=format&fit=crop&w=1400&q=80" alt="Abstract documentation" class="h-64 w-full object-cover" />
+      </div>
+    </section>
+
+    <section class="mt-6 grid gap-6 lg:grid-cols-[1.85fr,0.9fr]">
+      <article class="rounded-2xl border border-white/5 bg-ink-900/70 p-6 leading-relaxed">
+        <!-- component: markdown body -->
+        <div class="space-y-6">
+          <div class="relative rounded-xl border border-white/5 bg-white/5 p-4 lg:pl-14">
+            <div class="absolute top-4 -left-10 hidden flex-col items-center gap-2 lg:flex">
+              <button class="rounded-full bg-accent-500/20 px-3 py-1 text-xs text-accent-100" data-demo-toast="info" data-message="Anchor p-92aa opened">p-92aa</button>
+              <button class="rounded-full border border-white/10 bg-white/10 px-2 py-1 text-xs" data-action="toggle-drawer" data-target="comment-drawer">💬</button>
+            </div>
+            <h3 class="font-display text-xl font-semibold">Why anchors matter</h3>
+            <p class="text-slate-200">Each paragraph gets a stable anchor (`p-<hash>`) so comments remain tied to the same logical block even if Markdown shifts. Anchors survive minor edits and tolerate reordered sections.</p>
+          </div>
+          <div class="relative rounded-xl border border-white/5 bg-white/5 p-4 lg:pl-14">
+            <div class="absolute top-4 -left-10 hidden flex-col items-center gap-2 lg:flex">
+              <button class="rounded-full bg-accent-500/20 px-3 py-1 text-xs text-accent-100" data-demo-toast="info" data-message="Anchor p-b31c opened">p-b31c</button>
+              <button class="rounded-full border border-white/10 bg-white/10 px-2 py-1 text-xs" data-action="toggle-drawer" data-target="comment-drawer">💬</button>
+            </div>
+            <h3 class="font-display text-xl font-semibold">Algorithm overview</h3>
+            <p class="text-slate-200">We parse Markdown into blocks, normalize text, hash it with pageLocale id, and preserve anchors with a ±3 position tolerance. Orphaned anchors remain for 30 days so existing comments still resolve.</p>
+            <pre class="mt-3 rounded-xl bg-ink-800/70 p-3 text-xs text-slate-200">anchorHash = SHA-256(pageLocaleId + ":" + normalizedText).substring(0, 16)
+anchorId = "p-" + anchorHash</pre>
+          </div>
+          <div class="relative rounded-xl border border-white/5 bg-white/5 p-4 lg:pl-14">
+            <div class="absolute top-4 -left-10 hidden flex-col items-center gap-2 lg:flex">
+              <button class="rounded-full bg-accent-500/20 px-3 py-1 text-xs text-accent-100" data-demo-toast="info" data-message="Anchor p-f91d opened">p-f91d</button>
+              <button class="rounded-full border border-white/10 bg-white/10 px-2 py-1 text-xs" data-action="toggle-drawer" data-target="comment-drawer">💬</button>
+            </div>
+            <h3 class="font-display text-xl font-semibold">Edge cases</h3>
+            <ul class="mt-2 list-disc space-y-2 pl-5 text-slate-200">
+              <li>Duplicate content gets unique anchors via position index.</li>
+              <li>Splits keep the first half anchored; merges preserve the first anchor.</li>
+              <li>Reordering uses position tolerance and similarity before issuing new ids.</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <aside class="space-y-4">
+        <div class="rounded-2xl border border-amber-500/30 bg-amber-500/10 p-4 text-sm text-amber-50" data-component="alert-banner">Redirect applied · /anchors → /platform/anchors</div>
+        <div class="rounded-2xl border border-white/5 bg-ink-900/60 p-5">
+          <!-- component: subpages -->
+          <div class="mt-3 space-y-3 text-sm text-slate-200">
+            <div class="flex items-center justify-between">
+              <a class="hover:text-white" href="#">Anchor hashing (deep dive)</a>
+              <span class="rounded-full bg-white/10 px-3 py-1 text-xs text-slate-200">8 min</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <a class="hover:text-white" href="#">Comments API</a>
+              <span class="rounded-full bg-white/10 px-3 py-1 text-xs text-slate-200">6 min</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <a class="hover:text-white" href="#">Anchor reconciliation</a>
+              <span class="rounded-full bg-white/10 px-3 py-1 text-xs text-slate-200">9 min</span>
+            </div>
+          </div>
+        </div>
+        <div class="rounded-2xl border border-white/5 bg-ink-900/60 p-5 text-sm">
+          <!-- component: metadata -->
+          <div class="mt-3 space-y-2 text-slate-300">
+            <p>SEO summary: Generated by Gemini</p>
+            <p>Keywords: anchors, comments, markdown stability</p>
+            <p>Assets: 3 files · Secure mode off</p>
+          </div>
+          <button class="mt-4 w-full rounded-xl border border-white/10 bg-white/10 px-4 py-3 text-sm font-semibold hover:border-accent-500/70" data-demo-toast="success" data-message="Gemini regeneration queued">Regenerate SEO</button>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <div id="comment-drawer" class="fixed right-0 top-0 z-40 flex h-full w-full max-w-lg translate-x-full flex-col border-l border-white/10 bg-ink-900/95 p-6 shadow-2xl transition lg:translate-x-full" data-component="comment-drawer">
+    <div class="flex items-center justify-between">
+      <div>
+        <!-- component: comment drawer header -->
+        <p class="font-display text-xl font-semibold">Threads for anchors</p>
+      </div>
+      <button data-action="toggle-drawer" data-target="comment-drawer" class="rounded-full border border-white/10 px-3 py-2 text-sm">Close</button>
+    </div>
+    <div class="mt-4 space-y-4 overflow-y-auto">
+      <div class="rounded-xl border border-white/10 bg-white/5 p-4">
+        <div class="flex items-center justify-between text-xs text-slate-300">
+          <span>Anchor p-92aa · en-US</span>
+          <span class="rounded-full bg-emerald-500/15 px-3 py-1 text-emerald-100">Open</span>
+        </div>
+        <p class="mt-2 text-sm text-slate-200">“Could we clarify how the ±3 block tolerance works when headings move?”</p>
+        <div class="mt-3 space-y-2 rounded-lg bg-ink-800/70 p-3 text-xs text-slate-200">
+          <p><strong>Reply (Admin)</strong> — We compare similarity before creating a new anchor.</p>
+          <p><strong>Action</strong> — Regenerate anchor map after final edit.</p>
+        </div>
+      </div>
+      <div class="rounded-xl border border-white/10 bg-white/5 p-4">
+        <div class="flex items-center justify-between text-xs text-slate-300">
+          <span>Anchor p-b31c · fr-FR</span>
+          <span class="rounded-full bg-amber-500/15 px-3 py-1 text-amber-100">Pending</span>
+        </div>
+        <p class="mt-2 text-sm text-slate-200">“Need French translation links to canonical anchor?”</p>
+        <div class="mt-3 flex items-center gap-2 text-xs text-slate-400">
+          <button class="rounded-full bg-white/10 px-3 py-1">Assign</button>
+          <button class="rounded-full bg-accent-500/20 px-3 py-1 text-accent-100">Resolve</button>
+        </div>
+      </div>
+    </div>
+    <div class="mt-auto rounded-xl border border-white/10 bg-ink-800/80 p-4">
+      <p class="text-sm text-slate-200">Add comment to selected anchor</p>
+      <textarea class="mt-2 w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-slate-100" placeholder="Share feedback..." rows="3"></textarea>
+      <div class="mt-3 flex items-center justify-between text-xs text-slate-400">
+        <span>Posting as: admin@littlehelper.dev</span>
+        <button class="rounded-full bg-accent-500 px-4 py-2 text-xs font-semibold text-ink-900 shadow-glow">Submit</button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="border-t border-white/5 bg-ink-900/80 py-6 text-sm text-slate-300 backdrop-blur">
+    <div class="mx-auto flex max-w-screen-2xl items-center justify-between px-4">
+      <div>
+        <!-- component: footer -->
+        <p>Docs render from Git + DB metadata · Shared UI</p>
+      </div>
+      <a class="rounded-full border border-white/10 px-4 py-2 text-xs font-semibold text-slate-100 hover:border-accent-500/80" href="admin-dashboard.html">Go to admin</a>
+    </div>
+  </footer>
+
+  <script src="assets/base.js"></script>
+</body>
+</html>

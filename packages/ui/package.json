@@ -16,7 +16,7 @@
   },
   "scripts": {
     "build": "tsc && cp -r src/styles dist/",
-    "dev": "tsc --watch",
+    "dev": "sh -c 'cp -r src/styles dist/ && tsc --watch'",
     "lint": "eslint src",
     "lint:fix": "eslint src --fix",
     "typecheck": "tsc --noEmit",

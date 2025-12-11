@@ -1,11 +1,10 @@
 # Architecture Overview
 
 ## System Context
-LittleHelper integrates Git-hosted Markdown with a PostgreSQL metadata layer, delivering SSR public documentation and CSR admin experiences. Services communicate over HTTP/HTTPS and rely on S3-compatible storage for media.
+LittleHelper integrates Git-hosted Markdown with a PostgreSQL metadata layer, delivering SSR public documentation and an in-app CSR admin area within the same web experience. Services communicate over HTTP/HTTPS and rely on S3-compatible storage for media.
 
 ## High-Level Components
-- **Frontend SSR (Public)**: React + Vite SSR served by Node (Fastify). Renders localized help pages, release-specific versions, redirects, and paragraph-level comments via API calls.
-- **Frontend CSR (Admin)**: React SPA bundled separately, bootstrapped from `/admin`. Interacts with backend via JSON APIs and websockets for live validation/status.
+- **Frontend Web (Public + Admin)**: Single React + Vite app with SSR for public pages and a CSR admin area routed under `/admin`. Renders localized help pages, release-specific versions, redirects, and paragraph-level comments; admin tools call the backend via JSON APIs and websockets for live validation/status.
 - **Backend API**: Node (Fastify) with route groups: public SSR, admin APIs, auth callbacks, webhook endpoints (GitHub), and health checks.
 - **Database**: PostgreSQL managed by Prisma schema. Stores pages, locales, anchors, comments, releases, redirects, settings, users, sessions.
 - **GitHub Connector**: Service module handling repo cloning, commits, tags, and re-indexing. Prefers GitHub App; supports PAT fallback.
@@ -16,11 +15,10 @@ LittleHelper integrates Git-hosted Markdown with a PostgreSQL metadata layer, de
 - **Redirect Resolver**: Checks redirect table before resolving page slugs; issues 301 responses.
 
 ## Repository & Build Architecture
-- **pnpm workspace** at repo root with `package.json` + `pnpm-workspace.yaml` (to be added during scaffolding).
-- Proposed packages:
+- **pnpm workspace** at repo root with `package.json` + `pnpm-workspace.yaml`.
+- Packages:
   - `apps/api`: Fastify server hosting SSR rendering, admin/public APIs, OAuth callbacks, webhooks, and health checks.
-  - `apps/web`: React/Vite SSR entry that consumes API-rendered data for public pages and releases.
-  - `apps/admin`: React CSR bundle for settings, content editing, and moderation with Vite dev server.
+  - `apps/web`: React/Vite app providing SSR for public pages and the `/admin` CSR experience from a single bundle.
   - `packages/ui`: Shared component library with theming (light/dark/auto), typography, and button style selector.
   - `packages/shared`: Zod/TypeScript contracts, locale utilities, anchor helpers, and Gemini client wrappers.
 - **Makefile orchestration**: `launch`/`interactive` spin up dev servers (after pnpm install), `test` runs workspace tests, `verify` performs production builds, `migrate` and `migrate test` wrap Prisma flows. CI/CD should call these targets to ensure parity with local workflows.
@@ -390,4 +388,3 @@ When switching storage backends:
 
 ## Extensibility
 - Modular service boundaries: content sync, rendering, auth, settings, comments, releases. Each module exposed via interfaces to enable future provider swaps (e.g., different AI service, storage backend).
-

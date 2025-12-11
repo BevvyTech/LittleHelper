@@ -6,6 +6,7 @@
 - **Accessibility**: WCAG AA contrast, focus-visible outlines, skip links, keyboard-friendly modals/comments.
 - **Consistency**: Shared component library for both SSR pages and admin SPA. Button styles selectable (pill vs rounded) via settings.
 - **Feedback**: Inline validation, status badges for sync/test actions, non-blocking toasts for saves.
+- **Single-surface discipline**: Public docs and the `/admin` console share one modern interface; avoid extra chrome or pages outside the INTERFACE_PLAN.
 
 ## Layouts
 ### Public Help Page (SSR)
@@ -100,4 +101,3 @@ When a setting is configured via environment variable:
 - Login button triggers popup OAuth; on success, parent refreshes state without losing scroll.
 - Anchor links update URL fragment without full reload; comments loaded asynchronously.
 - Inline edit of title/slug with debounce and validation; preview of final URL.
-

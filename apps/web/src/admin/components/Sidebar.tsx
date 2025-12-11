@@ -1,13 +1,13 @@
 import { NavLink } from 'react-router-dom';
 
 const navItems = [
-  { to: '/dashboard', label: 'Dashboard', icon: '📊' },
-  { to: '/content', label: 'Content', icon: '📄' },
-  { to: '/comments', label: 'Comments', icon: '💬' },
-  { to: '/settings', label: 'Settings', icon: '⚙️' },
-  { to: '/users', label: 'Users', icon: '👥' },
-  { to: '/releases', label: 'Releases', icon: '🏷️' },
-  { to: '/tools', label: 'Tools', icon: '🔧' },
+  { to: '/admin/dashboard', label: 'Dashboard', icon: '📊' },
+  { to: '/admin/content', label: 'Content', icon: '📄' },
+  { to: '/admin/comments', label: 'Comments', icon: '💬' },
+  { to: '/admin/settings', label: 'Settings', icon: '⚙️' },
+  { to: '/admin/users', label: 'Users', icon: '👥' },
+  { to: '/admin/releases', label: 'Releases', icon: '🏷️' },
+  { to: '/admin/tools', label: 'Tools', icon: '🔧' },
 ];
 
 interface SidebarProps {

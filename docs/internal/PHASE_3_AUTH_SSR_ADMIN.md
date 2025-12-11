@@ -72,19 +72,19 @@
 
 ---
 
-## 3.3 Admin SPA Shell
+## 3.3 Admin SPA Shell (in-app at `/admin`)
 
 ### React Hooks to Create
 
 | Hook | Location | Purpose |
 |------|----------|---------|
-| `useAuth` | `apps/admin/src/hooks/` | Context provider + hook. State: user, isLoading, isAuthenticated, isAdmin. Methods: login (popup), logout, refreshUser |
+| `useAuth` | `apps/web/src/admin/hooks/` | Context provider + hook. State: user, isLoading, isAuthenticated, isAdmin. Methods: login (popup), logout, refreshUser |
 
 ### Components to Create
 
 | Component | Location | Purpose |
 |-----------|----------|---------|
-| `AuthGuard` | `apps/admin/src/components/` | Wrap routes - show loading skeleton while checking auth, show login prompt if not authenticated, show access denied if not admin |
+| `AuthGuard` | `apps/web/src/admin/components/` | Wrap routes - show loading skeleton while checking auth, show login prompt if not authenticated, show access denied if not admin |
 | `LoginPrompt` | same or inline | "Sign in with Google" button that calls `useAuth().login()` |
 
 ### Updates Required
@@ -191,7 +191,7 @@ apps/api/src/
     ├── authMiddleware.ts
     └── index.ts
 
-apps/admin/src/
+apps/web/src/admin/
 ├── hooks/
 │   ├── useAuth.ts
 │   └── index.ts

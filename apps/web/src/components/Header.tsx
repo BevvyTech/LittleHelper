@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import { Button } from '@littlehelper/ui';
 import { DrawerOverlay } from './DrawerOverlay.js';
 import { MobileDrawer } from './MobileDrawer.js';
 import { ThemeToggle } from './ThemeToggle.js';
@@ -18,8 +17,8 @@ export function Header() {
   return (
     <>
       <header className="header" id="navigation">
-        <div className="header__container">
-          <Link to="/" className="header__logo">
+        <div className="container header__container">
+          <Link to="/" className="header__brand">
             LittleHelper
           </Link>
 
@@ -32,19 +31,18 @@ export function Header() {
               ))}
             </nav>
 
+            <div className="header__search" role="search">
+              <input type="search" name="q" placeholder="Search documentation" aria-label="Search" />
+            </div>
+
             <div className="header__actions">
-              <div className="header__locale" aria-label="Locale switcher">
-                <button className="header__pill" type="button">
-                  EN
-                </button>
-                <button className="header__pill" type="button">
-                  ES
-                </button>
-              </div>
+              <button className="header__pill" type="button" aria-label="Switch locale">
+                EN ▼
+              </button>
               <ThemeToggle />
-              <Button variant="secondary" size="sm">
+              <Link to="/admin/login" className="header__login">
                 Sign In
-              </Button>
+              </Link>
             </div>
           </div>
 

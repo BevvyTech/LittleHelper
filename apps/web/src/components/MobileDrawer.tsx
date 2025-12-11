@@ -48,7 +48,7 @@ export function MobileDrawer({ open, onClose, navItems = [] }: MobileDrawerProps
       </div>
 
       <div className="mobile-drawer__footer">
-        <Link to="/admin" className="mobile-drawer__cta" onClick={onClose}>
+        <Link to="/admin/login" className="mobile-drawer__cta" onClick={onClose}>
           Sign In
         </Link>
       </div>

@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en" class="dark h-full">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LittleHelper Admin Template — Comments</title>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            ink: { 950: '#0b1624', 900: '#0e1b2b', 800: '#13253d', 700: '#1b324f', 600: '#254369' },
+            accent: { 500: '#4fd1c5', 400: '#7de4da' },
+            sky: { 300: '#a5c8ff' }
+          },
+          fontFamily: {
+            display: ['"Space Grotesk"', 'Inter', 'system-ui', 'sans-serif'],
+            body: ['Inter', 'system-ui', 'sans-serif']
+          },
+          boxShadow: {
+            glow: '0 12px 45px rgba(79,209,197,0.25)'
+          }
+        }
+      }
+    };
+  </script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="assets/base.css" />
+</head>
+<body class="min-h-screen text-slate-100">
+  <div id="toast-stack"></div>
+  <div class="flex min-h-screen bg-gradient-to-br from-ink-950 via-ink-900 to-ink-900/60">
+    <aside id="admin-sidebar" data-component="admin-sidebar" class="sticky top-0 hidden h-screen w-72 flex-shrink-0 flex-col border-r border-white/5 bg-ink-950/80 px-4 py-6 backdrop-blur lg:flex">
+      <a href="index.html" class="flex items-center gap-3 px-2 text-inherit no-underline">
+        <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-accent-500 to-sky-300 text-ink-950 font-bold">LH</div>
+        <div>
+          <!-- component: admin shell brand -->
+          <p class="font-display text-lg font-semibold">LittleHelper</p>
+          <p class="text-xs text-slate-400">Unified admin</p>
+        </div>
+      </a>
+      <nav class="mt-6 space-y-1 text-sm text-slate-200">
+        <a href="admin-dashboard.html" class="flex items-center gap-3 rounded-xl px-3 py-2 hover:bg-white/5" data-nav="dashboard">Dashboard</a>
+        <a href="admin-content.html" class="flex items-center gap-3 rounded-xl px-3 py-2 hover:bg-white/5" data-nav="content">Content</a>
+        <a href="admin-comments.html" class="flex items-center gap-3 rounded-xl bg-white/10 px-3 py-2 font-semibold text-white" data-nav="comments">Comments</a>
+        <a href="admin-users.html" class="flex items-center gap-3 rounded-xl px-3 py-2 hover:bg-white/5" data-nav="users">Users</a>
+        <a href="admin-tools.html" class="flex items-center gap-3 rounded-xl px-3 py-2 hover:bg-white/5" data-nav="tools">Admin Tools</a>
+        <a href="admin-settings.html" class="flex items-center gap-3 rounded-xl px-3 py-2 hover:bg-white/5" data-nav="settings">Settings</a>
+      </nav>
+      <div class="mt-auto space-y-2 rounded-xl border border-white/10 bg-white/5 p-3 text-xs text-slate-300">
+        <p class="font-semibold text-slate-100">Moderation</p>
+        <p>6 pending</p>
+        <p>1 flagged abuse</p>
+      </div>
+    </aside>
+
+    <div class="flex min-h-screen flex-1 flex-col">
+      <header data-component="admin-topbar" class="sticky top-0 z-20 flex items-center justify-between border-b border-white/5 bg-ink-900/70 px-4 py-3 backdrop-blur">
+        <div class="flex items-center gap-3">
+          <button data-action="toggle-sidebar" class="rounded-full border border-white/10 px-3 py-2 text-sm text-slate-100 lg:hidden">Menu</button>
+          <div class="rounded-full border border-amber-500/30 bg-amber-500/10 px-3 py-1 text-xs text-amber-100">Moderation queue</div>
+          <div class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-slate-200">Auto-approve off</div>
+        </div>
+        <div class="flex items-center gap-3">
+          <div class="hidden items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-2 text-sm text-slate-200/80 md:flex">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="m21 21-4.35-4.35M16.65 16.65A7.5 7.5 0 1 0 6.75 6.75a7.5 7.5 0 0 0 9.9 9.9Z" /></svg>
+            <input class="bg-transparent placeholder:text-slate-400 focus:outline-none" placeholder="Search comments" />
+          </div>
+          <button data-action="toggle-theme" class="rounded-full border border-white/10 bg-white/10 px-3 py-2 text-sm font-medium text-slate-100">Theme</button>
+          <div class="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-slate-200">
+            <span class="h-2 w-2 rounded-full bg-rose-400"></span>
+            <span>1 abuse flag</span>
+          </div>
+          <img src="https://avatars.githubusercontent.com/u/3?v=4" alt="User" class="h-10 w-10 rounded-full border border-white/10" />
+        </div>
+      </header>
+
+      <main class="flex-1 px-4 pb-12 pt-6">
+        <div class="mb-6 flex flex-wrap items-start justify-between gap-4">
+          <div class="space-y-1">
+            <!-- component: comments header -->
+            <h1 class="font-display text-3xl font-semibold">Moderation queue</h1>
+            <p class="text-slate-300">Approve, resolve, or remove inline threads mapped to paragraph anchors.</p>
+          </div>
+          <div class="flex gap-2 text-sm">
+            <button class="rounded-full bg-accent-500 px-4 py-2 font-semibold text-ink-900 shadow-glow" data-demo-toast="success" data-message="Approved">Approve selected</button>
+            <button class="rounded-full border border-white/15 px-4 py-2 font-semibold text-slate-100" data-demo-toast="warning" data-message="Flag escalated">Escalate</button>
+            <button class="rounded-full border border-white/15 px-4 py-2 font-semibold text-slate-100" data-demo-toast="danger" data-message="Deleted">Delete</button>
+          </div>
+        </div>
+
+        <section class="mt-6 grid gap-6 lg:grid-cols-[1.7fr,1fr]">
+          <div class="rounded-2xl border border-white/5 bg-ink-900/70 p-6" data-component="comments-table">
+            <div class="flex flex-wrap items-center justify-between gap-3">
+              <div class="flex items-center gap-3">
+                <!-- component: comments table -->
+                <div class="flex items-center gap-2 text-xs text-slate-300">
+                  <label class="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1">
+                    <span>Status</span>
+                    <select class="bg-transparent focus:outline-none">
+                      <option>Open</option>
+                      <option>Pending</option>
+                      <option>Resolved</option>
+                    </select>
+                  </label>
+                  <label class="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1">
+                    <span>Locale</span>
+                    <select class="bg-transparent focus:outline-none">
+                      <option>All</option>
+                      <option>en-US</option>
+                      <option>fr-FR</option>
+                    </select>
+                  </label>
+                </div>
+              </div>
+              <button class="rounded-full border border-white/10 px-3 py-2 text-xs" data-demo-toast="info" data-message="Filters applied">Apply filters</button>
+            </div>
+            <div class="mt-4 overflow-hidden rounded-xl border border-white/5">
+              <table class="w-full text-sm">
+                <thead class="bg-white/5 text-left text-slate-300">
+                  <tr>
+                    <th class="px-4 py-3">Anchor</th>
+                    <th class="px-4 py-3">Snippet</th>
+                    <th class="px-4 py-3">User</th>
+                    <th class="px-4 py-3">Locale</th>
+                    <th class="px-4 py-3">Status</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-white/5">
+                  <tr>
+                    <td class="px-4 py-3 text-xs text-slate-300">p-92aa</td>
+                    <td class="px-4 py-3 text-slate-100">Clarify ±3 block tolerance...</td>
+                    <td class="px-4 py-3 text-slate-300">sophia@dev</td>
+                    <td class="px-4 py-3 text-slate-300">en-US</td>
+                    <td class="px-4 py-3"><span class="rounded-full bg-emerald-500/15 px-3 py-1 text-xs font-semibold text-emerald-100">Open</span></td>
+                  </tr>
+                  <tr>
+                    <td class="px-4 py-3 text-xs text-slate-300">p-b31c</td>
+                    <td class="px-4 py-3 text-slate-100">Need canonical link for FR</td>
+                    <td class="px-4 py-3 text-slate-300">luc@fr</td>
+                    <td class="px-4 py-3 text-slate-300">fr-FR</td>
+                    <td class="px-4 py-3"><span class="rounded-full bg-amber-500/15 px-3 py-1 text-xs font-semibold text-amber-100">Pending</span></td>
+                  </tr>
+                  <tr>
+                    <td class="px-4 py-3 text-xs text-slate-300">p-ff99</td>
+                    <td class="px-4 py-3 text-slate-100">Inappropriate content</td>
+                    <td class="px-4 py-3 text-slate-300">anon</td>
+                    <td class="px-4 py-3 text-slate-300">en-US</td>
+                    <td class="px-4 py-3"><span class="rounded-full bg-rose-500/15 px-3 py-1 text-xs font-semibold text-rose-100">Flagged</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="space-y-4">
+            <div class="rounded-2xl border border-white/5 bg-ink-900/70 p-5" data-component="comment-detail">
+              <!-- component: comment detail -->
+              <div class="mt-3 space-y-2 text-sm text-slate-200">
+                <p><strong>Anchor:</strong> p-92aa</p>
+                <p><strong>Page:</strong> /platform/anchors (en-US)</p>
+                <p><strong>User:</strong> sophia@dev</p>
+                <p><strong>Thread:</strong> "Could we clarify how the tolerance works?"</p>
+                <p><strong>Actions:</strong></p>
+                <div class="flex flex-wrap gap-2">
+                  <button class="rounded-full bg-accent-500 px-4 py-2 text-xs font-semibold text-ink-900 shadow-glow" data-demo-toast="success" data-message="Resolved">Resolve</button>
+                  <button class="rounded-full border border-white/10 px-4 py-2 text-xs font-semibold" data-demo-toast="warning" data-message="Escalated">Escalate</button>
+                  <button class="rounded-full border border-rose-400/60 bg-rose-500/10 px-4 py-2 text-xs font-semibold text-rose-50" data-demo-toast="danger" data-message="Deleted">Delete</button>
+                </div>
+              </div>
+            </div>
+            <div class="rounded-2xl border border-white/5 bg-ink-900/70 p-5" data-component="moderation-rules">
+              <!-- component: moderation rules -->
+              <ul class="mt-3 space-y-2 text-sm text-slate-300">
+                <li>• Inline abuse filter marks comments as Flagged.</li>
+                <li>• Admins can ban users from Users page.</li>
+                <li>• Comment deletion retains anchor with 30-day retention.</li>
+              </ul>
+              <button class="mt-4 w-full rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-sm font-semibold hover:border-accent-500/70" data-demo-toast="info" data-message="Rules saved">Save rules</button>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+  <script src="assets/base.js"></script>
+</body>
+</html>
